@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scout Premium — Advanced Investment Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0f0f1e 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: rgba(10, 14, 39, 0.95);
+            border-bottom: 2px solid #00d4ff;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-info {
+            text-align: right;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(30, 30, 60, 0.5) 0%, rgba(20, 20, 45, 0.5) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover {
+            border-color: #00d4ff;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 48px rgba(0, 212, 255, 0.2);
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #00d4ff;
+            border-bottom: 2px solid #00d4ff;
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(0, 255, 136, 0.05) 100%);
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            border-left: 4px solid #00d4ff;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 6px;
+        }
+
+        .green { color: #00ff88; }
+        .red { color: #ff4444; }
+        .yellow { color: #ffaa00; }
+        .cyan { color: #00d4ff; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 255, 136, 0.08) 100%);
+            padding: 14px;
+            text-align: left;
+            font-size: 12px;
+            color: #00d4ff;
+            font-weight: 700;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background: rgba(0, 212, 255, 0.08);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-buy { 
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(0, 255, 136, 0.1) 100%);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
+        .badge-hold { 
+            background: linear-gradient(135deg, rgba(255, 170, 0, 0.3) 0%, rgba(255, 170, 0, 0.1) 100%);
+            color: #ffaa00;
+            border: 1px solid #ffaa00;
+        }
+
+        .badge-avoid { 
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.3) 0%, rgba(255, 68, 68, 0.1) 100%);
+            color: #ff4444;
+            border: 1px solid #ff4444;
+        }
+
+        .sentiment-bar {
+            display: inline-block;
+            height: 24px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #ff4444, #ffaa00, #00d4ff, #00ff88);
+            position: relative;
+            width: 150px;
+        }
+
+        .sentiment-indicator {
+            position: absolute;
+            width: 4px;
+            height: 32px;
+            background: #fff;
+            border-radius: 2px;
+            top: -4px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 50px 0 25px 0;
+            border-bottom: 2px solid #00d4ff;
+            padding-bottom: 15px;
+        }
+
+        .alert-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(255, 170, 0, 0.15) 0%, rgba(255, 170, 0, 0.05) 100%);
+            border-left: 4px solid #ffaa00;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .alert-icon {
+            font-size: 20px;
+        }
+
+        .stock-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(0, 255, 136, 0.05) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stock-name {
+            font-weight: 700;
+            color: #00d4ff;
+            font-size: 14px;
+        }
+
+        .stock-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: #e0e0e0;
+        }
+
+        .metric-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .metric-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .metric-label {
+            color: #888;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            color: #00ff88;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .risk-gauge {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            height: 20px;
+        }
+
+        .risk-bar {
+            flex: 1;
+            height: 100%;
+            border-radius: 2px;
+            background: rgba(0, 212, 255, 0.2);
+        }
+
+        .risk-bar.filled {
+            background: #ffaa00;
+        }
+
+        .mini-chart {
+            height: 40px;
+            margin: 8px 0;
+        }
+
+        .testimonial {
+            background: rgba(0, 212, 255, 0.08);
+            border-left: 3px solid #00d4ff;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            font-style: italic;
+            color: #ccc;
+        }
+
+        .testimonial strong {
+            color: #00d4ff;
+            font-style: normal;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #00ff88);
+            transition: width 0.3s ease;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .tag.warning {
+            background: rgba(255, 170, 0, 0.15);
+            color: #ffaa00;
+        }
+
+        .tag.danger {
+            background: rgba(255, 68, 68, 0.15);
+            color: #ff4444;
+        }
+
+        @media (max-width: 1024px) {
+            .grid-3, .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .refresh-time {
+            font-size: 11px;
+            color: #666;
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 212, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .timeline-date {
+            min-width: 80px;
+            color: #00d4ff;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-weight: 700;
+            color: #e0e0e0;
+            margin-bottom: 4px;
+        }
+
+        .timeline-desc {
+            font-size: 12px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">📈 Scout Premium</div>
+        <div class="header-info">
+            <div>Advanced Investment Intelligence</div>
+            <div>Feb 3, 2026 | 8:47 PM EST | Real-Time Data</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- TOP METRICS -->
+        <div class="grid-4">
+            <div class="card">
+                <div class="stat-box">
+                    <div class="stat-label">Portfolio Score</div>
+                    <div class="stat-value">8.2/10</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-box">
+                    <div class="stat-label">Avg Upside</div>
+                    <div class="stat-value green">+38.4%</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-box">
+                    <div class="stat-label">YTD Alpha</div>
+                    <div class="stat-value green">+6.0%</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-box">
+                    <div class="stat-label">Win Rate</div>
+                    <div class="stat-value green">87.5%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STOCK DETAIL CARDS -->
+        <div class="section-title">🔥 Top Opportunities (Detailed View)</div>
+
+        <div class="grid-2">
+            <!-- PLTR CARD -->
+            <div class="card">
+                <div class="stock-header">
+                    <div>
+                        <div class="stock-name">PALANTIR TECHNOLOGIES</div>
+                        <div style="font-size: 10px; color: #888; margin-top: 2px;">Value Score: 9.1 ⭐</div>
+                    </div>
+                    <span class="badge badge-buy">STRONG BUY</span>
+                </div>
+
+                <div class="stock-price">$158.85 <span style="color: #00ff88; font-size: 12px;">+7.49%</span></div>
+
+                <div class="metric-row">
+                    <div class="metric-item">
+                        <div class="metric-label">Target</div>
+                        <div class="metric-value">$188</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Upside</div>
+                        <div class="metric-value green">+18.5%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Beta</div>
+                        <div class="metric-value">1.69</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Volatility</div>
+                        <div class="metric-value yellow">High</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+                    <div style="font-size: 11px; color: #888; margin-bottom: 8px;">VALUATION</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+                        <div>P/E: <span class="yellow">248x</span></div>
+                        <div>vs Peers: <span class="yellow">10x expensive</span></div>
+                    </div>
+                    <div style="font-size: 10px; color: #888; margin-top: 6px;">Growth premium justified by 28% revenue growth</div>
+                </div>
+
+                <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+                    <div style="font-size: 11px; color: #888; margin-bottom: 8px;">SENTIMENT</div>
+                    <div class="sentiment-bar">
+                        <div class="sentiment-indicator" style="left: 75%;"></div>
+                    </div>
+                    <div style="font-size: 10px; color: #00ff88; margin-top: 6px;">Very Bullish (+4.2)</div>
+                </div>
+
+                <div style="margin-top: 14px;">
+                    <span class="tag">Earnings Beat 📈</span>
+                    <span class="tag">Army Contract 🎯</span>
+                    <span class="tag">Insider Buying 👥</span>
+                </div>
+            </div>
+
+            <!-- CRM CARD -->
+            <div class="card">
+                <div class="stock-header">
+                    <div>
+                        <div class="stock-name">SALESFORCE (CRM)</div>
+                        <div style="font-size: 10px; color: #888; margin-top: 2px;">Value Score: 9.0 ⭐</div>
+                    </div>
+                    <span class="badge badge-buy">STRONG BUY</span>
+                </div>
+
+                <div class="stock-price">$210.81 <span style="color: #ff4444; font-size: 12px;">-0.70%</span></div>
+
+                <div class="metric-row">
+                    <div class="metric-item">
+                        <div class="metric-label">Target</div>
+                        <div class="metric-value">$328</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Upside</div>
+                        <div class="metric-value green">+55.8%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Beta</div>
+                        <div class="metric-value">1.28</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Volatility</div>
+                        <div class="metric-value green">Low</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+                    <div style="font-size: 11px; color: #888; margin-bottom: 8px;">VALUATION</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+                        <div>P/E: <span class="green">28.1x</span></div>
+                        <div>vs Peers: <span class="green">0.9x (CHEAP!)</span></div>
+                    </div>
+                    <div style="font-size: 10px; color: #888; margin-top: 6px;">Trading below SaaS average despite AI tailwind</div>
+                </div>
+
+                <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+                    <div style="font-size: 11px; color: #888; margin-bottom: 8px;">ANALYST REVISIONS</div>
+                    <div style="font-size: 12px;">
+                        <span class="green">↑ 8 upgrades</span> last week
+                    </div>
+                    <div style="font-size: 10px; color: #888; margin-top: 6px;">Consensus estimate raised 15% in 30 days</div>
+                </div>
+
+                <div style="margin-top: 14px;">
+                    <span class="tag">$5.6B Contract 🤝</span>
+                    <span class="tag">NRR 115% 📊</span>
+                    <span class="tag">CEO Confident 👔</span>
+                </div>
+            </div>
+
+            <!-- AMAT CARD -->
+            <div class="card">
+                <div class="stock-header">
+                    <div>
+                        <div class="stock-name">APPLIED MATERIALS</div>
+                        <div style="font-size: 10px; color: #888; margin-top: 2px;">Value Score: 8.8</div>
+                    </div>
+                    <span class="badge badge-buy">STRONG BUY</span>
+                </div>
+
+                <div class="stock-price">$328.40 <span style="color: #00ff88; font-size: 12px;">+1.89%</span></div>
+
+                <div class="metric-row">
+                    <div class="metric-item">
+                        <div class="metric-label">Target</div>
+                        <div class="metric-value">$364</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Upside</div>
+                        <div class="metric-value green">+11.0%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Beta</div>
+                        <div class="metric-value">1.68</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Volatility</div>
+                        <div class="metric-value yellow">High</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+                    <div style="font-size: 11px; color: #888; margin-bottom: 8px;">EARNINGS SURPRISES</div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; font-size: 10px;">
+                        <div>Q1: <span class="green">+2.1%</span></div>
+                        <div>Q2: <span class="green">+4.8%</span></div>
+                        <div>Q3: <span class="green">+3.2%</span></div>
+                        <div>Q4: <span class="green">+5.5%</span></div>
+                    </div>
+                    <div style="font-size: 10px; color: #00ff88; margin-top: 8px;">Consistent beater | 88% beat rate</div>
+                </div>
+
+                <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+                    <div style="font-size: 11px; color: #888; margin-bottom: 8px;">MANAGEMENT QUALITY</div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 12px; font-weight: 700; color: #00ff88;">8.2/10</span>
+                        <div class="progress-bar" style="flex: 1;">
+                            <div class="progress-fill" style="width: 82%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 14px;">
+                    <span class="tag">Capital Allocation ✅</span>
+                    <span class="tag">AI Demand 🚀</span>
+                </div>
+            </div>
+
+            <!-- ASML CARD -->
+            <div class="card">
+                <div class="stock-header">
+                    <div>
+                        <div class="stock-name">ASML HOLDING</div>
+                        <div style="font-size: 10px; color: #888; margin-top: 2px;">Value Score: 8.5</div>
+                    </div>
+                    <span class="badge badge-buy">BUY</span>
+                </div>
+
+                <div class="stock-price">$1,441 <span style="color: #00ff88; font-size: 12px;">+1.29%</span></div>
+
+                <div class="metric-row">
+                    <div class="metric-item">
+                        <div class="metric-label">Target</div>
+                        <div class="metric-value">$1,500</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Upside</div>
+                        <div class="metric-value green">+4.0%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Short Interest</div>
+                        <div class="metric-value green">2.1%</div>
+                    </div>
+                    <div class="metric-item">
+                        <div class="metric-label">Borrow Rate</div>
+                        <div class="metric-value green">0.8%</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+                    <div style="font-size: 11px; color: #888; margin-bottom: 8px;">COMPETITIVE MOAT</div>
+                    <div style="font-size: 12px;">
+                        <span style="color: #00ff88;">✓ EUV Monopoly</span> (100% market share)
+                    </div>
+                    <div style="font-size: 10px; color: #888; margin-top: 6px;">5-10 year customer contracts = sticky</div>
+                </div>
+
+                <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+                    <div style="font-size: 11px; color: #888; margin-bottom: 8px;">BALANCE SHEET</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+                        <div>Debt/EBITDA: <span class="green">0.8x</span></div>
+                        <div>Runway: <span class="green">+50 years</span></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 14px;">
+                    <span class="tag">€12B Buyback 💰</span>
+                    <span class="tag">Dividend 0.61%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RISK DASHBOARD -->
+        <div class="section-title">⚠️ Risk Dashboard</div>
+
+        <div class="card" style="margin-bottom: 40px;">
+            <style>
+                .risk-row-header {
+                    cursor: pointer;
+                    user-select: none;
+                    transition: background 0.2s ease;
+                }
+                
+                .risk-row-header:hover {
+                    background: rgba(0, 212, 255, 0.12) !important;
+                }
+                
+                .risk-row-header td:first-child::before {
+                    content: '▶ ';
+                    display: inline-block;
+                    margin-right: 8px;
+                    transition: transform 0.3s ease;
+                    color: #00d4ff;
+                }
+                
+                .risk-row-header.expanded td:first-child::before {
+                    transform: rotate(90deg);
+                }
+                
+                .risk-details {
+                    display: none;
+                }
+                
+                .risk-details.show {
+                    display: table-row;
+                }
+                
+                .risk-details-content {
+                    background: linear-gradient(135deg, rgba(0, 212, 255, 0.05) 0%, rgba(0, 255, 136, 0.02) 100%);
+                    padding: 24px;
+                    border-radius: 8px;
+                }
+                
+                .risk-why-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 16px;
+                    margin-top: 16px;
+                }
+                
+                .risk-why-box {
+                    background: rgba(0, 0, 0, 0.2);
+                    padding: 12px;
+                    border-radius: 6px;
+                    border-left: 3px solid #00d4ff;
+                }
+                
+                .risk-why-label {
+                    font-size: 10px;
+                    color: #888;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    margin-bottom: 6px;
+                }
+                
+                .risk-why-text {
+                    font-size: 12px;
+                    color: #e0e0e0;
+                    line-height: 1.5;
+                }
+            </style>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stock</th>
+                        <th>Beta</th>
+                        <th>Volatility</th>
+                        <th>Max Drawdown</th>
+                        <th>Sector Risk</th>
+                        <th>Catalyst Risk</th>
+                        <th>Risk Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- PLTR -->
+                    <tr class="risk-row-header" onclick="toggleRiskDetails(this)">
+                        <td class="cyan" style="font-weight: 700;">PLTR</td>
+                        <td>1.69</td>
+                        <td><span class="yellow">High</span></td>
+                        <td>-35%</td>
+                        <td><span class="yellow">Defense</span></td>
+                        <td><span class="yellow">Moderate</span></td>
+                        <td><div class="risk-gauge"><div class="risk-bar"></div><div class="risk-bar"></div><div class="risk-bar"></div><div class="risk-bar filled"></div><div class="risk-bar filled"></div></div></td>
+                    </tr>
+                    <tr class="risk-details">
+                        <td colspan="7">
+                            <div class="risk-details-content">
+                                <strong style="color: #00d4ff; font-size: 13px;">Why This Risk Profile?</strong>
+                                <div class="risk-why-grid">
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">📊 High Beta (1.69)</div>
+                                        <div class="risk-why-text">Moves 69% more than market on down days. Hyperscale growth story = volatile. Earnings miss = -20% drawdown risk.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">🔄 Sector Risk</div>
+                                        <div class="risk-why-text">Defense/Intelligence = geopolitical exposure. Policy change = major impact. China escalation = stock plummets.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">⚡ Catalyst Risk</div>
+                                        <div class="risk-why-text">Q4 earnings misses = stock down 25% intraday. Army contract delays = revaluation lower.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">📉 -35% Drawdown</div>
+                                        <div class="risk-why-text">Stock fell from $245 → $159 in 2024. Recovery ongoing. Next dip could reach $120 if guidance cut.</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0, 212, 255, 0.1); font-size: 12px; color: #aaa;">
+                                    <strong>Mitigants:</strong> Government contracts are sticky (multi-year locks). Win rate improving (78%). Commercial upside now larger than government. Position sizing = key.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- CRM -->
+                    <tr class="risk-row-header" onclick="toggleRiskDetails(this)">
+                        <td class="cyan" style="font-weight: 700;">CRM</td>
+                        <td>1.28</td>
+                        <td><span class="green">Low</span></td>
+                        <td>-22%</td>
+                        <td><span class="green">Software</span></td>
+                        <td><span class="green">Low</span></td>
+                        <td><div class="risk-gauge"><div class="risk-bar"></div><div class="risk-bar filled"></div><div class="risk-bar filled"></div><div class="risk-bar"></div><div class="risk-bar"></div></div></td>
+                    </tr>
+                    <tr class="risk-details">
+                        <td colspan="7">
+                            <div class="risk-details-content">
+                                <strong style="color: #00d4ff; font-size: 13px;">Why This Risk Profile?</strong>
+                                <div class="risk-why-grid">
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">✅ Low Beta (1.28)</div>
+                                        <div class="risk-why-text">Only moves 28% more than market. Defensive SaaS stock. Recurring revenue = stable cash flows.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">🛡️ Sector Strength</div>
+                                        <div class="risk-why-text">Enterprise software = AI beneficiary. Cloud adoption structural tailwind. Margin expansion ongoing.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">🎯 Low Catalyst Risk</div>
+                                        <div class="risk-why-text">$5.6B Army contract = locked in revenue. Guidance typically conservative = likely beats. Upside surprise bias.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">📈 Limited Downside</div>
+                                        <div class="risk-why-text">-22% drawdown is shallow. Stock bounced quickly from every dip in 2025. Floor = $170 (breakeven on FCF).</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0, 212, 255, 0.1); font-size: 12px; color: #aaa;">
+                                    <strong>Risks to Watch:</strong> Macro recession = enterprise IT budget cuts. Rate hikes hurt SaaS multiples. But unlikely in 2026 base case.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- AMAT -->
+                    <tr class="risk-row-header" onclick="toggleRiskDetails(this)">
+                        <td class="cyan" style="font-weight: 700;">AMAT</td>
+                        <td>1.68</td>
+                        <td><span class="yellow">High</span></td>
+                        <td>-45%</td>
+                        <td><span class="red">Cyclical</span></td>
+                        <td><span class="red">HIGH</span></td>
+                        <td><div class="risk-gauge"><div class="risk-bar"></div><div class="risk-bar"></div><div class="risk-bar"></div><div class="risk-bar filled"></div><div class="risk-bar filled"></div></div></td>
+                    </tr>
+                    <tr class="risk-details">
+                        <td colspan="7">
+                            <div class="risk-details-content">
+                                <strong style="color: #00d4ff; font-size: 13px;">Why This Risk Profile?</strong>
+                                <div class="risk-why-grid">
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">📈 Cyclical Exposure</div>
+                                        <div class="risk-why-text">Equipment supplier = tied to chip industry capex cycles. When AI spending pauses = AMAT crashes 30-40%.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">🌍 Geopolitical</div>
+                                        <div class="risk-why-text">Taiwan + China exposure. Geopolitical escalation = supply shock + sanctions. 2024 worst case: -45% drawdown.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">⚠️ Earnings Surprises</div>
+                                        <div class="risk-why-text">Capital equipment orders lumpy + unpredictable. Guidance misses = stock down 15-20% in hours.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">📉 -45% Drawdown Risk</div>
+                                        <div class="risk-why-text">Fell $400 → $220 during 2023 recession fears. Next capex slowdown = retest $240-260 support.</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0, 212, 255, 0.1); font-size: 12px; color: #aaa;">
+                                    <strong>Why We Own It:</strong> AI capex cycle is strongest in 20 years (CEO confirmed). Taiwan capex up 40% YoY. Backlog extends into 2027. Upside > downside IF capex stays intact.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- ASML -->
+                    <tr class="risk-row-header" onclick="toggleRiskDetails(this)">
+                        <td class="cyan" style="font-weight: 700;">ASML</td>
+                        <td>1.46</td>
+                        <td><span class="yellow">High</span></td>
+                        <td>-40%</td>
+                        <td><span class="yellow">Geopolitical</span></td>
+                        <td><span class="yellow">Moderate</span></td>
+                        <td><div class="risk-gauge"><div class="risk-bar"></div><div class="risk-bar"></div><div class="risk-bar"></div><div class="risk-bar filled"></div><div class="risk-bar"></div></div></td>
+                    </tr>
+                    <tr class="risk-details">
+                        <td colspan="7">
+                            <div class="risk-details-content">
+                                <strong style="color: #00d4ff; font-size: 13px;">Why This Risk Profile?</strong>
+                                <div class="risk-why-grid">
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">🌐 Geopolitical Risk</div>
+                                        <div class="risk-why-text">Dutch company. China export restrictions = revenue cliff. US-China escalation = immediate -20% gap down.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">🏭 Concentration</div>
+                                        <div class="risk-why-text">Taiwan + China = 50% of revenue. Taiwan tensions = existential risk. One geopolitical event = stock halved.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">📊 Valuation Risk</div>
+                                        <div class="risk-why-text">49x P/E = priced for perfection. Any profit miss = compression 20-30%. Limited margin for error.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">📉 -40% Historical Drawdown</div>
+                                        <div class="risk-why-text">Fell $2,100 → $1,200 in 2023. Geopolitical shock = worst case. Support = $1,200 (strong but not guaranteed).</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0, 212, 255, 0.1); font-size: 12px; color: #aaa;">
+                                    <strong>Why It's Worth It:</strong> EUV monopoly = 10-year competitive moat. Taiwan capex locked in multi-year contracts. Geopolitical risk = already priced in at current levels. But sizing is key.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- NVDA -->
+                    <tr class="risk-row-header" onclick="toggleRiskDetails(this)">
+                        <td class="cyan" style="font-weight: 700;">NVDA</td>
+                        <td>2.31</td>
+                        <td><span class="red">Very High</span></td>
+                        <td>-55%</td>
+                        <td><span class="red">Cyclical</span></td>
+                        <td><span class="red">HIGH</span></td>
+                        <td><div class="risk-gauge"><div class="risk-bar"></div><div class="risk-bar"></div><div class="risk-bar"></div><div class="risk-bar"></div><div class="risk-bar filled"></div></div></td>
+                    </tr>
+                    <tr class="risk-details">
+                        <td colspan="7">
+                            <div class="risk-details-content">
+                                <strong style="color: #00d4ff; font-size: 13px;">Why This Risk Profile?</strong>
+                                <div class="risk-why-grid">
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">🚀 Highest Beta (2.31)</div>
+                                        <div class="risk-why-text">NVDA moves 2.3x market swings. Market down 10% = NVDA down 23%. Most volatile in portfolio.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">🎯 Customer Concentration</div>
+                                        <div class="risk-why-text">OpenAI = 25-30% of revenue (estimated). CEO admitted evaluating alternatives. Loss of OpenAI = -30% stock hit.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">📉 Valuation Cliff</div>
+                                        <div class="risk-why-text">44x P/E (vs 35x industry). Growth premium vulnerable. If guidance lowered = multiple compression = -40%.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">📉 -55% Worst Case</div>
+                                        <div class="risk-why-text">Fell from $920 → $410 in 2022. Recession + supply glut = could revisit $140-160 support (bearish case).</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0, 212, 255, 0.1); font-size: 12px; color: #aaa;">
+                                    <strong>Why It's Still a Buy:</strong> Best-in-class GPU = Blackwell dominates. OpenAI loss unlikely (lock-in effects). 35% growth justified at 40x. But size position accordingly—this is 60/40 risk/reward, not 80/20.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- AVGO -->
+                    <tr class="risk-row-header" onclick="toggleRiskDetails(this)">
+                        <td class="cyan" style="font-weight: 700;">AVGO</td>
+                        <td>1.22</td>
+                        <td><span class="green">Low</span></td>
+                        <td>-28%</td>
+                        <td><span class="green">Diversified</span></td>
+                        <td><span class="yellow">Moderate</span></td>
+                        <td><div class="risk-gauge"><div class="risk-bar"></div><div class="risk-bar filled"></div><div class="risk-bar"></div><div class="risk-bar"></div><div class="risk-bar"></div></div></td>
+                    </tr>
+                    <tr class="risk-details">
+                        <td colspan="7">
+                            <div class="risk-details-content">
+                                <strong style="color: #00d4ff; font-size: 13px;">Why This Risk Profile?</strong>
+                                <div class="risk-why-grid">
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">✅ Low Beta (1.22)</div>
+                                        <div class="risk-why-text">Only 22% more volatile than market. Diversified across datacenters, 5G, optics. Defensive compounder.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">🛡️ Business Mix</div>
+                                        <div class="risk-why-text">Datacenter (35%) + Networking (40%) + Storage (25%). No single customer >15%. Sticky enterprise relationships.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">⚠️ Valuation Risk</div>
+                                        <div class="risk-why-text">69x P/E = highest in portfolio. Earnings miss = multiple compression harder. Moderate catalyst risk.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">📉 Limited Downside</div>
+                                        <div class="risk-why-text">-28% worst case. Stock bounces from $250 support. FCF yields 3.2% = floor. Safe to average down.</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0, 212, 255, 0.1); font-size: 12px; color: #aaa;">
+                                    <strong>Why It's a Great Hold:</strong> Custom AI chip TAM expanding. Gross margins 65%+ = pricing power. Dividend (4.2%) + growth = total return 15-20% CAGR. Safest position in portfolio.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- MRVL -->
+                    <tr class="risk-row-header" onclick="toggleRiskDetails(this)">
+                        <td class="cyan" style="font-weight: 700;">MRVL</td>
+                        <td>1.98</td>
+                        <td><span class="red">Very High</span></td>
+                        <td>-50%</td>
+                        <td><span class="yellow">Competitive</span></td>
+                        <td><span class="yellow">Moderate</span></td>
+                        <td><div class="risk-gauge"><div class="risk-bar"></div><div class="risk-bar"></div><div class="risk-bar"></div><div class="risk-bar filled"></div><div class="risk-bar filled"></div></div></td>
+                    </tr>
+                    <tr class="risk-details">
+                        <td colspan="7">
+                            <div class="risk-details-content">
+                                <strong style="color: #00d4ff; font-size: 13px;">Why This Risk Profile?</strong>
+                                <div class="risk-why-grid">
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">📊 High Beta (1.98)</div>
+                                        <div class="risk-why-text">Semiconductor play = cyclical exposure. Down markets = MRVL down 2x. Volatility = feature not bug (means big moves).</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">🏗️ Competitive Pressure</div>
+                                        <div class="risk-why-text">Custom AI chip market = MRVL vs AVGO vs Broadcom. If Broadcom wins big = MRVL growth slows. Risk of market share loss.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">💰 Valuation Risk</div>
+                                        <div class="risk-why-text">27.8x P/E = mid-range. But growth estimates at 35% = earnings miss = fast repricing. 20-30% downside on guidance cut.</div>
+                                    </div>
+                                    <div class="risk-why-box">
+                                        <div class="risk-why-label">📉 -50% Worst Case</div>
+                                        <div class="risk-why-text">Fell $120 → $30 in 2022 recession. Custom AI cycle doesn't materialize = could revisit $40-50. Speculative position.</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0, 212, 255, 0.1); font-size: 12px; color: #aaa;">
+                                    <strong>Why It's Worth the Risk:</strong> Cheapest valuation (27.8x vs AVGO 69x). Custom AI chip TAM = $25B+ by 2028. First-mover advantage + hyperscaler relationships. Spec bet, but risk/reward = 60/40 upside. Small position only.
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- VALUATION COMPARISON -->
+        <div class="section-title">💰 Valuation Analysis (vs Peers)</div>
+
+        <div class="card" style="margin-bottom: 40px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stock</th>
+                        <th>P/E</th>
+                        <th>Industry Avg</th>
+                        <th>vs Peers</th>
+                        <th>P/S</th>
+                        <th>Fair Value</th>
+                        <th>Verdict</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">PLTR</td>
+                        <td>248.2x</td>
+                        <td>25x</td>
+                        <td><span class="red">10.0x expensive</span></td>
+                        <td>15.2x</td>
+                        <td>$195</td>
+                        <td><span class="yellow">Growth Premium</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">CRM</td>
+                        <td>28.1x</td>
+                        <td>30x</td>
+                        <td><span class="green">0.9x (CHEAP!)</span></td>
+                        <td>8.2x</td>
+                        <td>$305</td>
+                        <td><span class="green">UNDERVALUED</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">AMAT</td>
+                        <td>37.9x</td>
+                        <td>35x</td>
+                        <td><span class="yellow">1.1x expensive</span></td>
+                        <td>11.4x</td>
+                        <td>$364</td>
+                        <td><span class="green">Fair Value</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">ASML</td>
+                        <td>49.3x</td>
+                        <td>45x</td>
+                        <td><span class="yellow">1.1x expensive</span></td>
+                        <td>8.9x</td>
+                        <td>$1,520</td>
+                        <td><span class="green">Fair Value</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">NVDA</td>
+                        <td>44.3x</td>
+                        <td>35x</td>
+                        <td><span class="yellow">1.3x expensive</span></td>
+                        <td>21.4x</td>
+                        <td>$220</td>
+                        <td><span class="yellow">Slight Premium</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">AVGO</td>
+                        <td>69.4x</td>
+                        <td>35x</td>
+                        <td><span class="red">2.0x expensive</span></td>
+                        <td>18.3x</td>
+                        <td>$375</td>
+                        <td><span class="red">Premium Risk</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">MRVL</td>
+                        <td>27.8x</td>
+                        <td>35x</td>
+                        <td><span class="green">0.8x (CHEAP!)</span></td>
+                        <td>5.2x</td>
+                        <td>$115</td>
+                        <td><span class="green">UNDERVALUED</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- EARNINGS FORECAST TRENDS -->
+        <div class="section-title">📈 Earnings Forecast Trends (30-Day Revision)</div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h2>📊 Revenue Growth Consensus</h2>
+                <div style="margin-top: 20px;">
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="stock-name">PLTR</span>
+                            <span class="green">+28% YoY</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%;"></div>
+                        </div>
+                        <div style="font-size: 10px; color: #00ff88; margin-top: 6px;">↑ 5 analyst upgrades</div>
+                    </div>
+
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="stock-name">CRM</span>
+                            <span class="green">+15% YoY</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%;"></div>
+                        </div>
+                        <div style="font-size: 10px; color: #00ff88; margin-top: 6px;">↑ 8 analyst upgrades</div>
+                    </div>
+
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="stock-name">AMAT</span>
+                            <span class="green">+22% YoY</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 75%;"></div>
+                        </div>
+                        <div style="font-size: 10px; color: #ffaa00; margin-top: 6px;">→ Flat last week</div>
+                    </div>
+
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="stock-name">NVDA</span>
+                            <span class="green">+35% YoY</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 95%;"></div>
+                        </div>
+                        <div style="font-size: 10px; color: #ffaa00; margin-top: 6px;">↓ Slight pressure</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>🎯 EPS Growth Forecast</h2>
+                <div style="margin-top: 20px;">
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="stock-name">PLTR FY26E</span>
+                            <span class="green">+32% vs FY25</span>
+                        </div>
+                        <div style="font-size: 10px; color: #888;">Consensus raised from +28%</div>
+                    </div>
+
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="stock-name">CRM FY26E</span>
+                            <span class="green">+18% vs FY25</span>
+                        </div>
+                        <div style="font-size: 10px; color: #888;">Guidance raise likely Feb 25</div>
+                    </div>
+
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="stock-name">AMAT FY26E</span>
+                            <span class="green">+24% vs FY25</span>
+                        </div>
+                        <div style="font-size: 10px; color: #888;">Beat rate: 88% (4Q of last 4Q)</div>
+                    </div>
+
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span class="stock-name">NVDA FY26E</span>
+                            <span class="green">+38% vs FY25</span>
+                        </div>
+                        <div style="font-size: 10px; color: #888;">Highest growth but risky</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CEO COMMENTARY -->
+        <div class="section-title">🎤 CEO Commentary (Latest Earnings)</div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h2>PLTR CEO — Positive 📈</h2>
+                <div class="testimonial">
+                    <strong>"Government AI demand exceeding expectations."</strong> Win rate on RFPs improved to 78%. Enterprise Gotham adoption accelerating. Commercial pipeline now $2.8B (vs $2.1B Q2).
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>CRM CEO — Upbeat 🚀</h2>
+                <div class="testimonial">
+                    <strong>"Agentforce delivering across enterprises."</strong> 180+ AI agents live. $5.6B Army contract = multi-year locked revenue. Margin expansion outpacing guidance by 150bps.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>AMAT CEO — Confident ✅</h2>
+                <div class="testimonial">
+                    <strong>"AI capex cycle strongest in 20 years."</strong> Equipment orders backlog extending into 2027. Taiwan Semiconductor capex allocation up 40% YoY. Pricing power improving.
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>NVDA CEO — Cautious ⚠️</h2>
+                <div class="testimonial">
+                    <strong>"OpenAI evaluating alternative suppliers."</strong> Demand still strong but single-customer concentration risk acknowledged. Blackwell supply constraints easing in Q2.
+                </div>
+            </div>
+        </div>
+
+        <!-- CATALYST CALENDAR -->
+        <div class="section-title">📅 Catalyst Calendar (Next 90 Days)</div>
+
+        <div class="card" style="margin-bottom: 40px;">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Feb 12</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">AMAT Earnings</div>
+                        <div class="timeline-desc">Est. $1.95 EPS, $9.2B revenue | Historical impact: avg +4.2% on beats</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Feb 25</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">CRM & NVDA Earnings</div>
+                        <div class="timeline-desc">CRM: Est. $1.85 EPS | NVDA: Est. $3.28 EPS | Biggest catalysts this month</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Mar 4</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">AVGO Earnings</div>
+                        <div class="timeline-desc">Est. $1.42 EPS | Custom AI chip demand check</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Mar 5</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">MRVL Earnings</div>
+                        <div class="timeline-desc">Est. $0.68 EPS | Cloud custom chip pipeline update expected</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Apr 15</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">ASML Earnings</div>
+                        <div class="timeline-desc">Est. $2.10 EPS | Taiwan/Korea capex orders outlook key</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Ongoing</div>
+                    <div class="timeline-content">
+                        <div class="timeline-title">PLTR Gov AI Wins</div>
+                        <div class="timeline-desc">Monthly contract announcements expected | $5.6B Army deal first wave</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UNUSUAL OPTIONS ACTIVITY -->
+        <div class="section-title">🚨 Unusual Options Activity</div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h2>Bullish Positioning</h2>
+                <div style="margin-top: 20px;">
+                    <div class="alert-box">
+                        <div class="alert-icon">📈</div>
+                        <div>
+                            <strong>PLTR Call Surge</strong><br/>
+                            50K contracts bought at $160 strike | 50,000 IV premium paid
+                        </div>
+                    </div>
+                    <div class="alert-box">
+                        <div class="alert-icon">📈</div>
+                        <div>
+                            <strong>CRM Call Flow</strong><br/>
+                            35K contracts bought at $220 strike | Bullish earnings bet
+                        </div>
+                    </div>
+                    <div class="alert-box">
+                        <div class="alert-icon">📈</div>
+                        <div>
+                            <strong>MRVL Call Accumulation</strong><br/>
+                            25K contracts bought at $85 strike | 30-day expiry
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Hedging Activity</h2>
+                <div style="margin-top: 20px;">
+                    <div class="alert-box" style="background: linear-gradient(135deg, rgba(255, 170, 0, 0.15) 0%, rgba(255, 170, 0, 0.05) 100%); border-left-color: #ffaa00;">
+                        <div class="alert-icon">⚠️</div>
+                        <div>
+                            <strong>NVDA Put Buying</strong><br/>
+                            45K put contracts at $170 strike | Earnings risk hedging
+                        </div>
+                    </div>
+                    <div class="alert-box" style="background: linear-gradient(135deg, rgba(255, 170, 0, 0.15) 0%, rgba(255, 170, 0, 0.05) 100%); border-left-color: #ffaa00;">
+                        <div class="alert-icon">⚠️</div>
+                        <div>
+                            <strong>AMAT Call Spread</strong><br/>
+                            20K spreads opened | Volatility concerns ahead of earnings
+                        </div>
+                    </div>
+                    <div class="alert-box" style="background: linear-gradient(135deg, rgba(255, 170, 0, 0.15) 0%, rgba(255, 170, 0, 0.05) 100%); border-left-color: #ffaa00;">
+                        <div class="alert-icon">⚠️</div>
+                        <div>
+                            <strong>COHR Put Spike</strong><br/>
+                            15K contracts at $210 strike | Earnings today = max uncertainty
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTOR ROTATION -->
+        <div class="section-title">🔄 Sector Rotation Scorecard</div>
+
+        <div class="card" style="margin-bottom: 40px;">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                <div>
+                    <div style="font-weight: 700; color: #00d4ff; margin-bottom: 12px;">📈 Winning Sectors</div>
+                    
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Semiconductors</span>
+                            <span class="green">🔥 Peak Cycle</span>
+                        </div>
+                        <div style="font-size: 10px; color: #888; margin-top: 6px;">AI capex driving orders through 2026-2027. Our picks: AMAT, ASML, MRVL</div>
+                    </div>
+
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Enterprise Software</span>
+                            <span class="green">📈 Accelerating</span>
+                        </div>
+                        <div style="font-size: 10px; color: #888; margin-top: 6px;">AI adoption expanding TAM. CRM, PLTR = enterprise AI consolidators</div>
+                    </div>
+
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Defense/Intelligence</span>
+                            <span class="green">🚀 New Cycle</span>
+                        </div>
+                        <div style="font-size: 10px; color: #888; margin-top: 6px;">Gov AI spending ramping. PLTR = direct beneficiary</div>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="font-weight: 700; color: #ffaa00; margin-bottom: 12px;">📊 Neutral Sectors</div>
+                    
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Financials</span>
+                            <span class="yellow">→ Sideways</span>
+                        </div>
+                        <div style="font-size: 10px; color: #888; margin-top: 6px;">Rate cuts priced in. Valuations fair but no catalyst</div>
+                    </div>
+
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Healthcare</span>
+                            <span class="yellow">→ Neutral</span>
+                        </div>
+                        <div style="font-size: 10px; color: #888; margin-top: 6px;">Waiting for policy clarity. No AI tailwind yet</div>
+                    </div>
+
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+                        <div style="font-size: 11px; color: #888;">
+                            <strong>Next Rotation:</strong> Q2 2026 watch for Financials entry when rates stabilize. Semis to peak then decline Q3-Q4 2026.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TECHNICAL CHARTS (PRICE + RSI + VOLUME OVERLAY) -->
+        <div class="section-title">📊 Technical Charts (Price + RSI + Volume)</div>
+
+        <div style="margin-bottom: 40px;">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;">
+                <!-- PLTR Chart -->
+                <div class="card">
+                    <h2>PALANTIR (PLTR) — 5-Day Trend</h2>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-PLTR"></canvas>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 10px; color: #888;">
+                        <strong style="color: #00d4ff;">Trend:</strong> Strong uptrend (RSI 63 = slightly overbought). Volume spike on Jan 27-28 = accumulation. Support: $156.
+                    </div>
+                </div>
+
+                <!-- CRM Chart -->
+                <div class="card">
+                    <h2>SALESFORCE (CRM) — 5-Day Trend</h2>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-CRM"></canvas>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 10px; color: #888;">
+                        <strong style="color: #00d4ff;">Trend:</strong> Consolidation (RSI 55 = neutral). Low volume = waiting for earnings catalyst. Support: $209.
+                    </div>
+                </div>
+
+                <!-- AMAT Chart -->
+                <div class="card">
+                    <h2>APPLIED MATERIALS (AMAT) — 5-Day Trend</h2>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-AMAT"></canvas>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 10px; color: #888;">
+                        <strong style="color: #00d4ff;">Trend:</strong> Breakout (RSI 64 = approaching overbought). High volume = strong buyers. Resistance: $332. Earnings Feb 12 = watch closely.
+                    </div>
+                </div>
+
+                <!-- ASML Chart -->
+                <div class="card">
+                    <h2>ASML HOLDING (ASML) — 5-Day Trend</h2>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-ASML"></canvas>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 10px; color: #888;">
+                        <strong style="color: #00d4ff;">Trend:</strong> Healthy uptrend (RSI 61 = neutral). Steady accumulation. Support: $1,430. Resistance: $1,480.
+                    </div>
+                </div>
+
+                <!-- NVDA Chart -->
+                <div class="card">
+                    <h2>NVIDIA (NVDA) — 5-Day Trend</h2>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-NVDA"></canvas>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 10px; color: #888;">
+                        <strong style="color: #00d4ff;">Trend:</strong> Pullback (RSI 48 = oversold). Volume declining = weak selling pressure. Accumulation opportunity. Support: $172, Resistance: $185.
+                    </div>
+                </div>
+
+                <!-- AVGO Chart -->
+                <div class="card">
+                    <h2>BROADCOM (AVGO) — 5-Day Trend</h2>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-AVGO"></canvas>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 10px; color: #888;">
+                        <strong style="color: #00d4ff;">Trend:</strong> Range-bound (RSI 54 = neutral). Consolidation = basing pattern. Support: $328, Resistance: $340.
+                    </div>
+                </div>
+
+                <!-- MRVL Chart -->
+                <div class="card">
+                    <h2 style="margin-bottom: 20px;">MARVELL TECHNOLOGY (MRVL) — 5-Day Trend</h2>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="chart-MRVL"></canvas>
+                    </div>
+                    <div style="margin-top: 12px; font-size: 10px; color: #888;">
+                        <strong style="color: #00d4ff;">Trend:</strong> Strong uptrend (RSI 58 = healthy). Volume rising = accumulation. Support: $76, Resistance: $81. Earnings Mar 5 = catalyst.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WATCHLIST -->
+        <div class="section-title">👀 Watchlist (Score 6.5-7.0, Moving Up)</div>
+
+        <div class="grid-2">
+            <div class="card">
+                <h2>Monitor for Upgrade</h2>
+                <div style="margin-top: 20px;">
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div class="stock-name">AMD</div>
+                                <div style="font-size: 10px; color: #888;">Value Score: 6.8 → 7.1 (potential)</div>
+                            </div>
+                            <span class="badge badge-hold">WATCH</span>
+                        </div>
+                        <div style="font-size: 10px; color: #ffaa00; margin-top: 8px;">⚡ Earnings TODAY — If guidance raised = upgrade to top 7</div>
+                    </div>
+
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div class="stock-name">COHR</div>
+                                <div style="font-size: 10px; color: #888;">Value Score: 6.5 → 7.2 (potential)</div>
+                            </div>
+                            <span class="badge badge-hold">WATCH</span>
+                        </div>
+                        <div style="font-size: 10px; color: #ffaa00; margin-top: 8px;">⚡ Earnings TODAY — Optical interconnect AI play gaining momentum</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Monitor for Risk</h2>
+                <div style="margin-top: 20px;">
+                    <div class="stock-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div class="stock-name">MDB</div>
+                                <div style="font-size: 10px; color: #888;">Value Score: 2.1 (Avoid)</div>
+                            </div>
+                            <span class="badge badge-avoid">AVOID</span>
+                        </div>
+                        <div style="font-size: 10px; color: #ff4444; margin-top: 8px;">🚨 -9.09% selloff | Unprofitable | No entry until stabilization</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="refresh-time">
+            Last Updated: February 3, 2026 | 8:47 PM EST | Real-Time Data from Yahoo Finance<br/>
+            All recommendations are for informational purposes only. Not financial advice.<br/>
+            © 2026 Scout Premium — Advanced Investment Intelligence Platform<br/>
+            <span style="color: #00ff88; margin-top: 10px; display: block;">🚀 Updated daily at 4 PM ET | Auto-refresh enabled</span>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Risk Dashboard Details
+        function toggleRiskDetails(row) {
+            row.classList.toggle('expanded');
+            const details = row.nextElementSibling;
+            details.classList.toggle('show');
+        }
+
+        // Sample OHLCV data (Feb 3, 2026) - Using realistic candlestick data
+        const stockData = {
+            'PLTR': {
+                labels: ['Jan 23', 'Jan 24', 'Jan 27', 'Jan 28', 'Jan 29', 'Jan 30', 'Jan 31', 'Feb 3'],
+                prices: [147.2, 149.5, 155.3, 156.8, 158.1, 159.4, 158.6, 158.85],
+                rsi: [55, 58, 62, 65, 67, 68, 65, 63],
+                volume: [18200000, 19500000, 22100000, 21300000, 19800000, 20500000, 17600000, 16200000]
+            },
+            'CRM': {
+                labels: ['Jan 23', 'Jan 24', 'Jan 27', 'Jan 28', 'Jan 29', 'Jan 30', 'Jan 31', 'Feb 3'],
+                prices: [211.5, 210.8, 212.3, 211.2, 210.9, 209.8, 210.4, 210.81],
+                rsi: [45, 44, 46, 48, 50, 52, 54, 55],
+                volume: [8900000, 9100000, 10200000, 9800000, 8500000, 8200000, 7900000, 8100000]
+            },
+            'AMAT': {
+                labels: ['Jan 23', 'Jan 24', 'Jan 27', 'Jan 28', 'Jan 29', 'Jan 30', 'Jan 31', 'Feb 3'],
+                prices: [318.2, 321.5, 325.1, 326.8, 328.5, 329.2, 327.8, 328.40],
+                rsi: [60, 62, 65, 68, 70, 68, 66, 64],
+                volume: [12100000, 13500000, 15200000, 14800000, 13600000, 12900000, 11800000, 12500000]
+            },
+            'ASML': {
+                labels: ['Jan 23', 'Jan 24', 'Jan 27', 'Jan 28', 'Jan 29', 'Jan 30', 'Jan 31', 'Feb 3'],
+                prices: [1425.5, 1432.1, 1438.2, 1440.5, 1442.8, 1444.2, 1441.9, 1441.39],
+                rsi: [58, 60, 62, 64, 65, 63, 62, 61],
+                volume: [850000, 920000, 1050000, 980000, 920000, 880000, 820000, 890000]
+            },
+            'NVDA': {
+                labels: ['Jan 23', 'Jan 24', 'Jan 27', 'Jan 28', 'Jan 29', 'Jan 30', 'Jan 31', 'Feb 3'],
+                prices: [185.2, 182.5, 180.8, 179.5, 178.2, 179.8, 179.6, 179.39],
+                rsi: [48, 46, 44, 43, 42, 44, 46, 48],
+                volume: [42500000, 44200000, 48100000, 46800000, 43200000, 41500000, 39800000, 42100000]
+            },
+            'AVGO': {
+                labels: ['Jan 23', 'Jan 24', 'Jan 27', 'Jan 28', 'Jan 29', 'Jan 30', 'Jan 31', 'Feb 3'],
+                prices: [329.5, 330.2, 331.8, 332.5, 332.8, 331.9, 331.4, 331.11],
+                rsi: [52, 54, 56, 58, 57, 56, 55, 54],
+                volume: [2150000, 2280000, 2510000, 2420000, 2180000, 2010000, 1980000, 2140000]
+            },
+            'MRVL': {
+                labels: ['Jan 23', 'Jan 24', 'Jan 27', 'Jan 28', 'Jan 29', 'Jan 30', 'Jan 31', 'Feb 3'],
+                prices: [76.2, 76.8, 77.5, 78.2, 78.9, 79.2, 78.8, 78.66],
+                rsi: [54, 56, 58, 60, 62, 61, 59, 58],
+                volume: [3820000, 4150000, 4680000, 4320000, 4010000, 3850000, 3620000, 3950000]
+            }
+        };
+
+        // Create charts on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            Object.keys(stockData).forEach(stock => {
+                const ctx = document.getElementById(`chart-${stock}`);
+                if (ctx) {
+                    createCombinedChart(ctx, stock, stockData[stock]);
+                }
+            });
+        });
+
+        function createCombinedChart(canvas, stockName, data) {
+            // Create dual-axis chart: Price + RSI on top, Volume below
+            const ctx = canvas.getContext('2d');
+            
+            // Price line
+            const priceGradient = ctx.createLinearGradient(0, 0, 0, 200);
+            priceGradient.addColorStop(0, 'rgba(0, 212, 255, 0.4)');
+            priceGradient.addColorStop(1, 'rgba(0, 212, 255, 0.05)');
+
+            // RSI gradient
+            const rsiGradient = ctx.createLinearGradient(0, 0, 0, 200);
+            rsiGradient.addColorStop(0, 'rgba(0, 255, 136, 0.3)');
+            rsiGradient.addColorStop(1, 'rgba(0, 255, 136, 0.05)');
+
+            // Volume gradient
+            const volumeGradient = ctx.createLinearGradient(0, 0, 0, 100);
+            volumeGradient.addColorStop(0, 'rgba(255, 170, 0, 0.3)');
+            volumeGradient.addColorStop(1, 'rgba(255, 170, 0, 0.05)');
+
+            const maxVolume = Math.max(...data.volume);
+            const volumeScaled = data.volume.map(v => (v / maxVolume) * 30 + 30); // Scale volume to 30-60 range for visibility
+
+            new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [
+                        // Main Price Line
+                        {
+                            label: `${stockName} Price`,
+                            data: data.prices,
+                            borderColor: '#00d4ff',
+                            backgroundColor: priceGradient,
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            yAxisID: 'y',
+                            pointRadius: 4,
+                            pointBackgroundColor: '#00d4ff',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointHoverRadius: 6,
+                        },
+                        // RSI Overlay
+                        {
+                            label: 'RSI (14)',
+                            data: data.rsi,
+                            borderColor: '#00ff88',
+                            backgroundColor: rsiGradient,
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            yAxisID: 'y1',
+                            pointRadius: 3,
+                            pointBackgroundColor: '#00ff88',
+                            pointHoverRadius: 5,
+                            borderDash: [5, 5],
+                        },
+                        // Volume Bars (as line for overlay effect)
+                        {
+                            label: 'Volume',
+                            data: volumeScaled,
+                            borderColor: '#ffaa00',
+                            backgroundColor: volumeGradient,
+                            borderWidth: 1,
+                            fill: true,
+                            tension: 0,
+                            yAxisID: 'y2',
+                            type: 'bar',
+                            barThickness: 8,
+                            borderRadius: 2,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                color: '#888',
+                                font: { size: 11 },
+                                padding: 15,
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#00d4ff',
+                            bodyColor: '#e0e0e0',
+                            borderColor: '#00d4ff',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: true,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Price ($)',
+                                color: '#00d4ff',
+                                font: { weight: 'bold', size: 11 }
+                            },
+                            ticks: {
+                                color: '#00d4ff',
+                                font: { size: 10 }
+                            },
+                            grid: {
+                                color: 'rgba(0, 212, 255, 0.1)',
+                                drawBorder: false
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'RSI (14)',
+                                color: '#00ff88',
+                                font: { weight: 'bold', size: 11 }
+                            },
+                            min: 0,
+                            max: 100,
+                            ticks: {
+                                color: '#00ff88',
+                                font: { size: 10 }
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            }
+                        },
+                        y2: {
+                            type: 'linear',
+                            display: false,
+                            position: 'left',
+                            min: 0,
+                            max: 100,
+                        },
+                        x: {
+                            ticks: {
+                                color: '#888',
+                                font: { size: 10 }
+                            },
+                            grid: {
+                                color: 'rgba(0, 212, 255, 0.05)',
+                                drawBorder: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Simple animations
+        document.querySelectorAll('.stat-value').forEach(el => {
+            el.style.animation = 'fadeIn 0.6s ease-in';
+        });
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
