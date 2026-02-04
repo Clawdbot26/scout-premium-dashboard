@@ -18,9 +18,53 @@
             background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0f0f1e 100%);
             color: #e0e0e0;
             display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 0;
+        }
+        header {
+            background: rgba(10, 14, 39, 0.95);
+            border-bottom: 2px solid #00d4ff;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+        }
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            display: block;
+        }
+        .nav {
+            display: flex;
+            gap: 25px;
+        }
+        .nav a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        .nav a:hover,
+        .nav a.active {
+            color: #00ff88;
+        }
+        .nav a.active {
+            border-bottom: 2px solid #00ff88;
+            padding-bottom: 2px;
+        }
+        main {
+            flex: 1;
+            display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
             padding: 20px;
         }
         .container {
@@ -92,16 +136,27 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📈 Scout Premium</h1>
-        <p>Advanced Investment Intelligence Dashboard<br/>Real-time stock analysis with technical charts & risk insights</p>
-        
-        <div>
-            <a href="dashboard-premium.html" class="button">Open Dashboard</a>
-            <a href="methodology.html" class="button secondary">How We Score</a>
+    <header>
+        <a href="index.html" class="logo">📈 Scout Premium</a>
+        <div class="nav">
+            <a href="index.html" class="active">Home</a>
+            <a href="dashboard-premium.html">Dashboard</a>
+            <a href="methodology.html">Methodology</a>
+            <a href="https://github.com/Clawdbot26/scout-premium-dashboard" target="_blank">GitHub</a>
         </div>
+    </header>
 
-        <div class="features">
+    <main>
+        <div class="container">
+            <h1>📈 Scout Premium</h1>
+            <p>Advanced Investment Intelligence Dashboard<br/>Real-time stock analysis with technical charts & risk insights</p>
+            
+            <div>
+                <a href="dashboard-premium.html" class="button">Open Dashboard</a>
+                <a href="methodology.html" class="button secondary">How We Score</a>
+            </div>
+
+            <div class="features">
             <div class="feature">
                 <h3>🔥 7 Top Stocks</h3>
                 <p>Highest-conviction picks (Value Score 7.0+)</p>
@@ -127,6 +182,6 @@
                 <p>Dark theme with glassmorphism UI</p>
             </div>
         </div>
-    </div>
+    </main>
 </body>
 </html>

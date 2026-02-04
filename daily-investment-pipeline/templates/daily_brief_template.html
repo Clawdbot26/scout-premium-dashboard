@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Investment Brief - {{ date }}</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 10px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            padding: 30px; 
+            text-align: center;
+        }
+        .header h1 { 
+            margin: 0; 
+            font-size: 2.2em; 
+            font-weight: 300;
+        }
+        .header .date { 
+            font-size: 1.1em; 
+            opacity: 0.9; 
+            margin-top: 5px;
+        }
+        .section { 
+            padding: 30px; 
+            border-bottom: 1px solid #e9ecef;
+        }
+        .section:last-child { 
+            border-bottom: none; 
+        }
+        .section h2 { 
+            color: #495057; 
+            border-bottom: 2px solid #667eea; 
+            padding-bottom: 10px; 
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
+        .card { 
+            background: #f8f9fa; 
+            padding: 20px; 
+            border-radius: 8px; 
+            border-left: 4px solid #667eea;
+        }
+        .card h3 { 
+            margin-top: 0; 
+            color: #343a40; 
+            font-size: 1.1em;
+        }
+        .metric { 
+            display: flex; 
+            justify-content: space-between; 
+            margin: 8px 0; 
+        }
+        .metric-label { 
+            font-weight: 500; 
+            color: #6c757d; 
+        }
+        .metric-value { 
+            font-weight: 600; 
+        }
+        .positive { 
+            color: #28a745; 
+        }
+        .negative { 
+            color: #dc3545; 
+        }
+        .neutral { 
+            color: #6c757d; 
+        }
+        .alert { 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 5px; 
+            font-weight: 500;
+        }
+        .alert-critical { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb;
+        }
+        .alert-high { 
+            background: #fff3cd; 
+            color: #856404; 
+            border: 1px solid #ffeaa7;
+        }
+        .alert-medium { 
+            background: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb;
+        }
+        .stock-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 15px 0;
+        }
+        .stock-table th, .stock-table td { 
+            padding: 12px; 
+            text-align: left; 
+            border-bottom: 1px solid #e9ecef;
+        }
+        .stock-table th { 
+            background: #f8f9fa; 
+            font-weight: 600; 
+            color: #495057;
+        }
+        .stock-table tr:hover { 
+            background: #f8f9fa; 
+        }
+        .news-item { 
+            margin: 15px 0; 
+            padding: 15px; 
+            background: #f8f9fa; 
+            border-radius: 5px; 
+            border-left: 4px solid #17a2b8;
+        }
+        .news-title { 
+            font-weight: 600; 
+            color: #343a40; 
+            margin-bottom: 8px;
+        }
+        .news-meta { 
+            font-size: 0.9em; 
+            color: #6c757d; 
+            margin-bottom: 8px;
+        }
+        .news-summary { 
+            color: #495057; 
+        }
+        .recommendation-badge { 
+            padding: 4px 8px; 
+            border-radius: 12px; 
+            font-size: 0.8em; 
+            font-weight: 600; 
+            text-transform: uppercase;
+        }
+        .rec-strong-buy { 
+            background: #28a745; 
+            color: white; 
+        }
+        .rec-buy { 
+            background: #20c997; 
+            color: white; 
+        }
+        .rec-hold { 
+            background: #ffc107; 
+            color: #212529; 
+        }
+        .rec-sell { 
+            background: #fd7e14; 
+            color: white; 
+        }
+        .rec-strong-sell { 
+            background: #dc3545; 
+            color: white; 
+        }
+        .footer { 
+            background: #343a40; 
+            color: #adb5bd; 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            body { 
+                padding: 10px; 
+            }
+            .section { 
+                padding: 20px; 
+            }
+            .grid { 
+                grid-template-columns: 1fr; 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 Daily Investment Brief</h1>
+            <div class="date">{{ date }} • Market Analysis</div>
+        </div>
+
+        <!-- Executive Summary -->
+        <div class="section">
+            <h2>🎯 Executive Summary</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Market Overview</h3>
+                    <div class="metric">
+                        <span class="metric-label">S&P 500:</span>
+                        <span class="metric-value positive">+0.8%</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">NASDAQ:</span>
+                        <span class="metric-value positive">+1.2%</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">VIX:</span>
+                        <span class="metric-value">14.8 (Low volatility)</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Market Sentiment</h3>
+                    <div class="metric">
+                        <span class="metric-label">Overall:</span>
+                        <span class="metric-value {{ news_sentiment.overall | sentiment_class }}">{{ news_sentiment.overall | title }}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Tech Sector:</span>
+                        <span class="metric-value {{ news_sentiment.tech | sentiment_class }}">{{ news_sentiment.tech | title }}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">New Alerts:</span>
+                        <span class="metric-value">{{ portfolio.alerts | length }}</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Today's Focus</h3>
+                    <div class="metric">
+                        <span class="metric-label">Top Stock Pick:</span>
+                        <span class="metric-value">{{ top_stock_pick.symbol }}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Earnings Today:</span>
+                        <span class="metric-value">{{ earnings_today | length }} companies</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">News Articles:</span>
+                        <span class="metric-value">{{ news_articles | length }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Critical Alerts -->
+        {% if portfolio.alerts %}
+        <div class="section">
+            <h2>🚨 Critical Alerts</h2>
+            {% for alert in portfolio.alerts %}
+                {% if alert.severity in ['critical', 'high'] %}
+                <div class="alert alert-{{ alert.severity }}">
+                    <strong>{{ alert.symbol }}:</strong> {{ alert.message }}<br>
+                    <small>Action: {{ alert.action_recommended }}</small>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Portfolio section removed for privacy -->
+
+        <!-- Technical Analysis -->
+        <div class="section">
+            <h2>📈 Top Technical Opportunities</h2>
+            <table class="stock-table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Price</th>
+                        <th>Score</th>
+                        <th>Recommendation</th>
+                        <th>R:R Ratio</th>
+                        <th>Entry</th>
+                        <th>Target</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in technical_picks[:10] %}
+                    <tr>
+                        <td><strong>{{ stock.symbol }}</strong></td>
+                        <td>${{ stock.price | format_currency }}</td>
+                        <td>{{ stock.overall_score | round(1) }}</td>
+                        <td><span class="recommendation-badge rec-{{ stock.recommendation.replace('_', '-') }}">{{ stock.recommendation }}</span></td>
+                        <td>{{ stock.risk_reward_ratio | round(1) }}:1</td>
+                        <td>${{ stock.entry_price | format_currency }}</td>
+                        <td>${{ stock.target_price | format_currency }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- News Analysis -->
+        <div class="section">
+            <h2>📰 Key News & Analysis</h2>
+            {% for article in news_articles[:5] %}
+            <div class="news-item">
+                <div class="news-title">{{ article.title }}</div>
+                <div class="news-meta">
+                    {{ article.source }} • {{ article.published_at | format_date }} • 
+                    <span class="{{ article.sentiment | sentiment_class }}">{{ article.sentiment | title }}</span> • 
+                    Relevance: {{ article.relevance_score }}/100
+                    {% if article.tickers_mentioned %}
+                    • Tickers: {{ article.tickers_mentioned | join(', ') }}
+                    {% endif %}
+                </div>
+                <div class="news-summary">{{ article.summary }}</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Sector Analysis -->
+        <div class="section">
+            <h2>🏭 Sector Analysis</h2>
+            <div class="grid">
+                {% for sector, data in sector_analysis.items() %}
+                <div class="card">
+                    <h3>{{ sector | title }}</h3>
+                    <div class="metric">
+                        <span class="metric-label">Portfolio Weight:</span>
+                        <span class="metric-value">{{ portfolio.sector_allocation.get(sector, 0) | format_percent }}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">News Sentiment:</span>
+                        <span class="metric-value {{ data.sentiment | sentiment_class }}">{{ data.sentiment | title }}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">News Count:</span>
+                        <span class="metric-value">{{ data.news_count }}</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Top Ticker:</span>
+                        <span class="metric-value">{{ data.top_ticker or 'N/A' }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Market Calendar -->
+        <div class="section">
+            <h2>📅 Today's Market Calendar</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Earnings Releases</h3>
+                    {% if earnings_today %}
+                        {% for earning in earnings_today %}
+                        <div class="metric">
+                            <span class="metric-label">{{ earning.symbol }}:</span>
+                            <span class="metric-value">{{ earning.time }}</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="neutral">No major earnings today</p>
+                    {% endif %}
+                </div>
+
+                <div class="card">
+                    <h3>Economic Data</h3>
+                    {% if economic_events %}
+                        {% for event in economic_events %}
+                        <div class="metric">
+                            <span class="metric-label">{{ event.name }}:</span>
+                            <span class="metric-value">{{ event.time }}</span>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="neutral">No major economic releases today</p>
+                    {% endif %}
+                </div>
+
+                <div class="card">
+                    <h3>Market Hours</h3>
+                    <div class="metric">
+                        <span class="metric-label">Pre-Market:</span>
+                        <span class="metric-value">4:00 AM - 9:30 AM ET</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Regular Hours:</span>
+                        <span class="metric-value">9:30 AM - 4:00 PM ET</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">After Hours:</span>
+                        <span class="metric-value">4:00 PM - 8:00 PM ET</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Items -->
+        <div class="section">
+            <h2>✅ Today's Action Items</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Immediate Actions</h3>
+                    <ul>
+                        {% for alert in portfolio.alerts %}
+                            {% if alert.severity in ['critical', 'high'] %}
+                            <li><strong>{{ alert.symbol }}:</strong> {{ alert.action_recommended }}</li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if not (portfolio.alerts | selectattr('severity', 'in', ['critical', 'high']) | list) %}
+                        <li>No immediate actions required</li>
+                        {% endif %}
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Research & Monitoring</h3>
+                    <ul>
+                        {% for stock in technical_picks[:3] %}
+                            {% if stock.recommendation in ['strong_buy', 'buy'] %}
+                            <li>Research {{ stock.symbol }} entry opportunity</li>
+                            {% endif %}
+                        {% endfor %}
+                        <li>Monitor high-impact news developments</li>
+                        <li>Review portfolio allocation vs targets</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Risk Management</h3>
+                    <ul>
+                        {% if portfolio.rebalancing_needed %}
+                        <li>Portfolio rebalancing recommended</li>
+                        {% endif %}
+                        <li>Review stop-loss levels on all positions</li>
+                        <li>Monitor sector concentration limits</li>
+                        {% if portfolio.cash_position / portfolio.total_value < 0.10 %}
+                        <li>Consider raising cash position</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Generated on {{ timestamp }} • Daily Investment Research Pipeline<br>
+            <small>⚠️ This is not financial advice. All investment decisions should be based on your own research and risk tolerance.</small>
+        </div>
+    </div>
+</body>
+</html>

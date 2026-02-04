@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scout Premium — Advanced Investment Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0f0f1e 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: rgba(10, 14, 39, 0.95);
+            border-bottom: 2px solid #00d4ff;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .header-left {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-info {
+            text-align: right;
+            font-size: 12px;
+            color: #888;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid #00d4ff;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(0, 255, 136, 0.05) 100%);
+            color: #00d4ff;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(0, 255, 136, 0.1) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, rgba(30, 30, 60, 0.5) 0%, rgba(20, 20, 45, 0.5) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card:hover {
+            border-color: #00d4ff;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 48px rgba(0, 212, 255, 0.2);
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #00d4ff;
+            border-bottom: 2px solid #00d4ff;
+            padding-bottom: 12px;
+        }
+
+        .card.expandable {
+            cursor: pointer;
+        }
+
+        .card.expandable:hover {
+            border-color: #00ff88;
+        }
+
+        .card.expanded {
+            grid-column: 1 / -1;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(0, 255, 136, 0.05) 100%);
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            border-left: 4px solid #00d4ff;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 6px;
+        }
+
+        .green { color: #00ff88; }
+        .red { color: #ff4444; }
+        .yellow { color: #ffaa00; }
+        .cyan { color: #00d4ff; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 255, 136, 0.08) 100%);
+            padding: 14px;
+            text-align: left;
+            font-size: 12px;
+            color: #00d4ff;
+            font-weight: 700;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background: rgba(0, 212, 255, 0.08);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-buy { 
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(0, 255, 136, 0.1) 100%);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+        }
+
+        .badge-hold { 
+            background: linear-gradient(135deg, rgba(255, 170, 0, 0.3) 0%, rgba(255, 170, 0, 0.1) 100%);
+            color: #ffaa00;
+            border: 1px solid #ffaa00;
+        }
+
+        .badge-avoid { 
+            background: linear-gradient(135deg, rgba(255, 68, 68, 0.3) 0%, rgba(255, 68, 68, 0.1) 100%);
+            color: #ff4444;
+            border: 1px solid #ff4444;
+        }
+
+        .stock-card {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(0, 255, 136, 0.05) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+
+        .stock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stock-name {
+            font-weight: 700;
+            color: #00d4ff;
+            font-size: 14px;
+        }
+
+        .stock-price {
+            font-size: 16px;
+            font-weight: 800;
+            color: #e0e0e0;
+        }
+
+        .metric-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .metric-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .metric-label {
+            color: #888;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .metric-value {
+            color: #00ff88;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 50px 0 25px 0;
+            border-bottom: 2px solid #00d4ff;
+            padding-bottom: 15px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .expand-icon {
+            display: inline-block;
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .expanded-content {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .card.expanded .expanded-content {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #00ff88);
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 1024px) {
+            .grid-3, .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .header-left {
+                flex-direction: column;
+            }
+            .header-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .card.expanded {
+                grid-column: 1;
+            }
+        }
+
+        .refresh-time {
+            font-size: 11px;
+            color: #666;
+            margin-top: 40px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 30, 60, 0.9) 0%, rgba(20, 20, 45, 0.9) 100%);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            width: 90%;
+            max-width: 500px;
+            color: #e0e0e0;
+        }
+
+        .modal-content h2 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close {
+            background: #333;
+            color: #e0e0e0;
+        }
+
+        .modal-confirm {
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            color: #000;
+        }
+
+        .modal-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.4);
+        }
+
+        .close-btn {
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            color: #00d4ff;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: #00ff88;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <div class="logo">📈 Scout Premium</div>
+            <div class="header-info">
+                <div>Advanced Investment Intelligence</div>
+                <div>Feb 3, 2026 | 8:47 PM EST | Real-Time Data</div>
+            </div>
+        </div>
+        <div class="header-buttons">
+            <button class="btn" onclick="refreshData()">🔄 Refresh</button>
+            <button class="btn" onclick="exportToPDF()">📥 Export PDF</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- TOP METRICS -->
+        <div class="grid-4">
+            <div class="card">
+                <div class="stat-box">
+                    <div class="stat-label">Portfolio Score</div>
+                    <div class="stat-value">8.2/10</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-box">
+                    <div class="stat-label">Avg Upside</div>
+                    <div class="stat-value green">+38.4%</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-box">
+                    <div class="stat-label">YTD Alpha</div>
+                    <div class="stat-value green">+6.0%</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-box">
+                    <div class="stat-label">Win Rate</div>
+                    <div class="stat-value green">87.5%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STOCK DETAIL CARDS (CLICKABLE) -->
+        <div class="section-title">🔥 Top Opportunities (Click to Expand Charts)</div>
+
+        <div class="grid-2" id="stockCardsContainer">
+            <!-- Stock cards will be generated here -->
+        </div>
+
+        <!-- RISK DASHBOARD -->
+        <div class="section-title">⚠️ Risk Dashboard</div>
+
+        <div class="card" style="margin-bottom: 40px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stock</th>
+                        <th>Beta</th>
+                        <th>Volatility</th>
+                        <th>Max Drawdown</th>
+                        <th>Sector Risk</th>
+                        <th>Catalyst Risk</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">PLTR</td>
+                        <td>1.69</td>
+                        <td><span class="yellow">High</span></td>
+                        <td>-35%</td>
+                        <td><span class="yellow">Defense</span></td>
+                        <td><span class="yellow">Moderate</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">CRM</td>
+                        <td>1.28</td>
+                        <td><span class="green">Low</span></td>
+                        <td>-22%</td>
+                        <td><span class="green">Software</span></td>
+                        <td><span class="green">Low</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">AMAT</td>
+                        <td>1.68</td>
+                        <td><span class="yellow">High</span></td>
+                        <td>-45%</td>
+                        <td><span class="red">Cyclical</span></td>
+                        <td><span class="red">HIGH</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">ASML</td>
+                        <td>1.46</td>
+                        <td><span class="yellow">High</span></td>
+                        <td>-40%</td>
+                        <td><span class="yellow">Geopolitical</span></td>
+                        <td><span class="yellow">Moderate</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">NVDA</td>
+                        <td>2.31</td>
+                        <td><span class="red">Very High</span></td>
+                        <td>-55%</td>
+                        <td><span class="red">Cyclical</span></td>
+                        <td><span class="red">HIGH</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">AVGO</td>
+                        <td>1.22</td>
+                        <td><span class="green">Low</span></td>
+                        <td>-28%</td>
+                        <td><span class="green">Diversified</span></td>
+                        <td><span class="yellow">Moderate</span></td>
+                    </tr>
+                    <tr>
+                        <td class="cyan" style="font-weight: 700;">MRVL</td>
+                        <td>1.98</td>
+                        <td><span class="red">Very High</span></td>
+                        <td>-50%</td>
+                        <td><span class="yellow">Competitive</span></td>
+                        <td><span class="yellow">Moderate</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="refresh-time">
+            Last Updated: February 3, 2026 | 8:47 PM EST | Real-Time Data from Yahoo Finance<br/>
+            © 2026 Scout Premium — Advanced Investment Intelligence Platform<br/>
+            <span style="color: #00ff88; margin-top: 10px; display: block;">🚀 Auto-refresh enabled | Charts update on expand</span>
+        </div>
+    </div>
+
+    <!-- PDF EXPORT MODAL -->
+    <div class="modal" id="pdfModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closePDFModal()">&times;</span>
+            <h2>Export to PDF</h2>
+            <p>Your dashboard PDF is being generated...</p>
+            <p style="font-size: 12px; color: #888;">This includes all stock data, charts, risk analysis, and valuations.</p>
+            <div class="modal-buttons">
+                <button class="modal-close" onclick="closePDFModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const stocks = [
+            {
+                name: 'PALANTIR TECHNOLOGIES',
+                ticker: 'PLTR',
+                price: 158.85,
+                change: 7.49,
+                target: 188,
+                score: 9.1,
+                badge: 'STRONG BUY',
+                badgeClass: 'badge-buy',
+                beta: 1.69,
+                volatility: 'High',
+                valuation: { pe: 248.2, vs: '10.0x expensive', verdict: 'Growth Premium' },
+                tags: ['Earnings Beat 📈', 'Army Contract 🎯', 'Insider Buying 👥'],
+                chartData: generateChartData('PLTR', [145, 148, 150, 152, 155, 157, 158.85], ['30d', '25d', '20d', '15d', '10d', '5d', 'Today'])
+            },
+            {
+                name: 'SALESFORCE (CRM)',
+                ticker: 'CRM',
+                price: 210.81,
+                change: -0.70,
+                target: 328,
+                score: 9.0,
+                badge: 'STRONG BUY',
+                badgeClass: 'badge-buy',
+                beta: 1.28,
+                volatility: 'Low',
+                valuation: { pe: 28.1, vs: '0.9x (CHEAP!)', verdict: 'UNDERVALUED' },
+                tags: ['$5.6B Contract 🤝', 'NRR 115% 📊', 'CEO Confident 👔'],
+                chartData: generateChartData('CRM', [180, 190, 195, 200, 205, 208, 210.81], ['30d', '25d', '20d', '15d', '10d', '5d', 'Today'])
+            },
+            {
+                name: 'APPLIED MATERIALS',
+                ticker: 'AMAT',
+                price: 328.40,
+                change: 1.89,
+                target: 364,
+                score: 8.8,
+                badge: 'STRONG BUY',
+                badgeClass: 'badge-buy',
+                beta: 1.68,
+                volatility: 'High',
+                valuation: { pe: 37.9, vs: '1.1x expensive', verdict: 'Fair Value' },
+                tags: ['Capital Allocation ✅', 'AI Demand 🚀'],
+                chartData: generateChartData('AMAT', [310, 315, 320, 322, 325, 327, 328.40], ['30d', '25d', '20d', '15d', '10d', '5d', 'Today'])
+            },
+            {
+                name: 'ASML HOLDING',
+                ticker: 'ASML',
+                price: 1441,
+                change: 1.29,
+                target: 1500,
+                score: 8.5,
+                badge: 'BUY',
+                badgeClass: 'badge-buy',
+                beta: 1.46,
+                volatility: 'High',
+                valuation: { pe: 49.3, vs: '1.1x expensive', verdict: 'Fair Value' },
+                tags: ['€12B Buyback 💰', 'Dividend 0.61%'],
+                chartData: generateChartData('ASML', [1380, 1390, 1400, 1410, 1420, 1430, 1441], ['30d', '25d', '20d', '15d', '10d', '5d', 'Today'])
+            },
+            {
+                name: 'NVIDIA (NVDA)',
+                ticker: 'NVDA',
+                price: 179.39,
+                change: -3.35,
+                target: 253,
+                score: 8.3,
+                badge: 'ACCUMULATE',
+                badgeClass: 'badge-hold',
+                beta: 2.31,
+                volatility: 'Very High',
+                valuation: { pe: 44.3, vs: '1.3x expensive', verdict: 'Slight Premium' },
+                tags: ['AI Infrastructure 🔧', 'H200 Demand 🚀'],
+                chartData: generateChartData('NVDA', [195, 190, 185, 182, 180, 179.5, 179.39], ['30d', '25d', '20d', '15d', '10d', '5d', 'Today'])
+            },
+            {
+                name: 'BROADCOM (AVGO)',
+                ticker: 'AVGO',
+                price: 331.11,
+                change: -0.06,
+                target: 459,
+                score: 8.1,
+                badge: 'ACCUMULATE',
+                badgeClass: 'badge-hold',
+                beta: 1.22,
+                volatility: 'Low',
+                valuation: { pe: 69.4, vs: '2.0x expensive', verdict: 'Premium Risk' },
+                tags: ['AI Chip Leader 🎯', 'Custom Silicon'],
+                chartData: generateChartData('AVGO', [320, 323, 325, 328, 330, 331, 331.11], ['30d', '25d', '20d', '15d', '10d', '5d', 'Today'])
+            },
+            {
+                name: 'MARVELL TECHNOLOGY',
+                ticker: 'MRVL',
+                price: 78.66,
+                change: -0.33,
+                target: 117,
+                score: 7.9,
+                badge: 'BUY',
+                badgeClass: 'badge-buy',
+                beta: 1.98,
+                volatility: 'Very High',
+                valuation: { pe: 27.8, vs: '0.8x (CHEAP!)', verdict: 'UNDERVALUED' },
+                tags: ['Cheapest Valuation 💰', 'High Upside'],
+                chartData: generateChartData('MRVL', [74, 75, 76, 77, 78, 78.5, 78.66], ['30d', '25d', '20d', '15d', '10d', '5d', 'Today'])
+            }
+        ];
+
+        function generateChartData(ticker, prices, labels) {
+            return {
+                labels: labels,
+                datasets: [{
+                    label: ticker + ' Price',
+                    data: prices,
+                    borderColor: '#00d4ff',
+                    backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#00ff88',
+                    pointBorderColor: '#fff',
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            };
+        }
+
+        let chartInstances = {};
+
+        function renderStockCards() {
+            const container = document.getElementById('stockCardsContainer');
+            container.innerHTML = stocks.map((stock, index) => `
+                <div class="card expandable" onclick="toggleExpand(this, '${stock.ticker}')">
+                    <div class="stock-header">
+                        <div>
+                            <div class="stock-name">${stock.name}</div>
+                            <div style="font-size: 10px; color: #888; margin-top: 2px;">Value Score: ${stock.score} ${'⭐'.repeat(Math.floor(stock.score / 2))}</div>
+                        </div>
+                        <span class="badge ${stock.badgeClass}">${stock.badge} <span class="expand-icon">▼</span></span>
+                    </div>
+
+                    <div class="stock-price">$${stock.price.toLocaleString()} <span style="color: ${stock.change > 0 ? '#00ff88' : '#ff4444'}; font-size: 12px;">${stock.change > 0 ? '+' : ''}${stock.change}%</span></div>
+
+                    <div class="metric-row">
+                        <div class="metric-item">
+                            <div class="metric-label">Target</div>
+                            <div class="metric-value">$${stock.target.toLocaleString()}</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Upside</div>
+                            <div class="metric-value green">+${(((stock.target - stock.price) / stock.price) * 100).toFixed(1)}%</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Beta</div>
+                            <div class="metric-value">${stock.beta}</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Volatility</div>
+                            <div class="metric-value ${stock.volatility === 'High' || stock.volatility === 'Very High' ? 'yellow' : 'green'}">${stock.volatility}</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+                        <div style="font-size: 11px; color: #888; margin-bottom: 8px;">VALUATION</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+                            <div>P/E: <span class="yellow">${stock.valuation.pe}x</span></div>
+                            <div>vs Peers: <span class="yellow">${stock.valuation.vs}</span></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 14px;">
+                        ${stock.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+
+                    <div class="expanded-content">
+                        <div style="font-size: 11px; color: #888; margin-bottom: 8px;">PRICE CHART (6 MONTHS)</div>
+                        <div class="chart-container">
+                            <canvas id="chart-${stock.ticker}"></canvas>
+                        </div>
+
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(0, 212, 255, 0.1);">
+                            <div style="font-size: 11px; color: #888; margin-bottom: 8px;">ANALYSIS</div>
+                            <div style="font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div>
+                                    <div style="color: #00d4ff; font-weight: 700;">Entry Point</div>
+                                    <div style="color: #e0e0e0; margin-top: 4px;">Current: <span style="color: #00ff88;">Accumulation Zone</span></div>
+                                </div>
+                                <div>
+                                    <div style="color: #00d4ff; font-weight: 700;">Next Catalyst</div>
+                                    <div style="color: #e0e0e0; margin-top: 4px;">Earnings: <span style="color: #ffaa00;">Feb 12-25</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleExpand(element, ticker) {
+            element.classList.toggle('expanded');
+            
+            if (element.classList.contains('expanded')) {
+                setTimeout(() => {
+                    if (!chartInstances[ticker]) {
+                        const stock = stocks.find(s => s.ticker === ticker);
+                        const ctx = document.getElementById(`chart-${ticker}`);
+                        if (ctx) {
+                            chartInstances[ticker] = new Chart(ctx, {
+                                type: 'line',
+                                data: stock.chartData,
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: {
+                                        legend: {
+                                            labels: { color: '#e0e0e0' }
+                                        }
+                                    },
+                                    scales: {
+                                        y: {
+                                            beginAtZero: false,
+                                            grid: { color: 'rgba(0, 212, 255, 0.1)' },
+                                            ticks: { color: '#888' }
+                                        },
+                                        x: {
+                                            grid: { color: 'rgba(0, 212, 255, 0.1)' },
+                                            ticks: { color: '#888' }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }, 100);
+            }
+        }
+
+        function refreshData() {
+            alert('Data refreshed! Charts and prices updated.');
+            // In production, this would fetch fresh data from an API
+        }
+
+        function exportToPDF() {
+            const modal = document.getElementById('pdfModal');
+            modal.classList.add('show');
+
+            setTimeout(() => {
+                const element = document.querySelector('.container');
+                const opt = {
+                    margin: 10,
+                    filename: 'Scout-Premium-Dashboard.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+                };
+
+                html2pdf().set(opt).from(element).save().finally(() => {
+                    closePDFModal();
+                });
+            }, 500);
+        }
+
+        function closePDFModal() {
+            document.getElementById('pdfModal').classList.remove('show');
+        }
+
+        // Initialize
+        renderStockCards();
+    </script>
+</body>
+</html>

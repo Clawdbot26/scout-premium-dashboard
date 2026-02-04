@@ -1,0 +1,103 @@
+{
+  "portfolio_metadata": {
+    "total_value": 200000,
+    "last_updated": "2026-02-01",
+    "currency": "USD",
+    "account_type": "individual_taxable",
+    "risk_profile": "moderate_aggressive"
+  },
+  
+  "positions": [
+    {
+      "symbol": "NVDA",
+      "company": "NVIDIA Corporation", 
+      "shares": 50,
+      "avg_cost": 900.00,
+      "current_value": 45000,
+      "sector": "tech",
+      "position_size_pct": 0.225,
+      "entry_date": "2025-12-15",
+      "stop_loss": 765.00,
+      "target_price": 1200.00,
+      "notes": "AI semiconductor leader, riding AI wave"
+    },
+    {
+      "symbol": "TSLA",
+      "company": "Tesla Inc",
+      "shares": 100,
+      "avg_cost": 250.00,
+      "current_value": 25000,
+      "sector": "energy",
+      "position_size_pct": 0.125,
+      "entry_date": "2025-11-20",
+      "stop_loss": 212.50,
+      "target_price": 350.00,
+      "notes": "EV and energy storage leader"
+    },
+    {
+      "symbol": "MSFT",
+      "company": "Microsoft Corporation",
+      "shares": 60,
+      "avg_cost": 420.00,
+      "current_value": 25200,
+      "sector": "tech",
+      "position_size_pct": 0.126,
+      "entry_date": "2025-10-10",
+      "stop_loss": 357.00,
+      "target_price": 500.00,
+      "notes": "Cloud computing and AI integration"
+    }
+  ],
+  
+  "cash_position": {
+    "amount": 104800,
+    "percentage": 0.524,
+    "notes": "High cash position for opportunities"
+  },
+  
+  "sector_allocation": {
+    "tech": 0.351,
+    "energy": 0.125,
+    "finance": 0.0,
+    "healthcare": 0.0,
+    "cash": 0.524
+  },
+  
+  "watchlist": [
+    {
+      "symbol": "ASML",
+      "reason": "Semiconductor equipment monopoly",
+      "target_entry": 850.00,
+      "sector": "tech"
+    },
+    {
+      "symbol": "V",
+      "reason": "Payment processing moat",
+      "target_entry": 280.00,
+      "sector": "finance"
+    },
+    {
+      "symbol": "UNH",
+      "reason": "Healthcare consolidation play",
+      "target_entry": 520.00,
+      "sector": "healthcare"
+    }
+  ],
+  
+  "risk_management": {
+    "max_position_size": 0.05,
+    "max_sector_weight": 0.40,
+    "stop_loss_default": 0.15,
+    "portfolio_stop_loss": 0.20,
+    "cash_reserve_min": 0.10,
+    "rebalance_threshold": 0.05
+  },
+  
+  "performance_tracking": {
+    "ytd_return": 0.0,
+    "benchmark": "SPY",
+    "last_rebalance": "2025-12-01",
+    "total_trades": 3,
+    "win_rate": 0.667
+  }
+}

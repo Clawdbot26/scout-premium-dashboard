@@ -39,6 +39,38 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            text-decoration: none;
+            display: block;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #00ff88;
+        }
+
+        .nav-links a.active {
+            color: #00ff88;
+            border-bottom: 2px solid #00ff88;
+            padding-bottom: 2px;
         }
 
         .header-info {
@@ -431,9 +463,17 @@
 </head>
 <body>
     <header>
-        <div class="logo">📈 Scout Premium</div>
-        <div class="header-info">
-            <div>February 03, 2026 | 09:08 PM EST | Real-Time Data</div>
+        <a href="index.html" class="logo">📈 Scout Premium</a>
+        <div class="header-nav">
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard-premium.html" class="active">Dashboard</a>
+                <a href="methodology.html">Methodology</a>
+                <a href="https://github.com/Clawdbot26/scout-premium-dashboard" target="_blank">GitHub</a>
+            </div>
+            <div class="header-info">
+                <div>February 03, 2026 | 09:08 PM EST | Real-Time Data</div>
+            </div>
         </div>
     </header>
 

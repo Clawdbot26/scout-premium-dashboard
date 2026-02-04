@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Investment Brief - DEMO</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; background: #f5f7fa; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .header h1 { margin: 0; font-size: 2.2em; font-weight: 300; }
+        .demo-badge { background: #ff6b6b; padding: 8px 16px; border-radius: 20px; display: inline-block; margin-top: 10px; font-size: 0.9em; }
+        .section { padding: 30px; border-bottom: 1px solid #e9ecef; }
+        .section h2 { color: #495057; border-bottom: 2px solid #667eea; padding-bottom: 10px; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea; }
+        .card h3 { margin-top: 0; color: #343a40; }
+        .metric { display: flex; justify-content: space-between; margin: 8px 0; }
+        .positive { color: #28a745; font-weight: 600; }
+        .negative { color: #dc3545; font-weight: 600; }
+        .alert { padding: 15px; margin: 10px 0; border-radius: 5px; background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+        .table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #e9ecef; }
+        .table th { background: #f8f9fa; font-weight: 600; }
+        .news-item { margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; border-left: 4px solid #17a2b8; }
+        .rec-badge { padding: 4px 8px; border-radius: 12px; font-size: 0.8em; font-weight: 600; color: white; background: #28a745; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 Daily Investment Brief</h1>
+            <div class="demo-badge">🎯 DEMO VERSION</div>
+            <div style="margin-top: 10px;">Sunday, February 01, 2026 • Sample Data</div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Executive Summary</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Portfolio Performance</h3>
+                    <div class="metric">
+                        <span>Total Value:</span>
+                        <span>$205,750.00</span>
+                    </div>
+                    <div class="metric">
+                        <span>Day Change:</span>
+                        <span class="positive">$1,850.00 (+0.9%)</span>
+                    </div>
+                    <div class="metric">
+                        <span>Unrealized P&L:</span>
+                        <span class="positive">$8,250.00 (+5.0%)</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Market Sentiment</h3>
+                    <div class="metric">
+                        <span>Overall:</span>
+                        <span class="positive">Bullish</span>
+                    </div>
+                    <div class="metric">
+                        <span>Tech Sector:</span>
+                        <span class="positive">Bullish</span>
+                    </div>
+                    <div class="metric">
+                        <span>Active Alerts:</span>
+                        <span>2</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Today's Focus</h3>
+                    <div class="metric">
+                        <span>Top Pick:</span>
+                        <span>ASML</span>
+                    </div>
+                    <div class="metric">
+                        <span>Earnings Today:</span>
+                        <span>2 companies</span>
+                    </div>
+                    <div class="metric">
+                        <span>News Articles:</span>
+                        <span>3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🚨 Active Alerts</h2>
+            <div class="alert"><strong>NVDA:</strong> Price $920 approaching target $1150<br><small>Action: CONSIDER TAKING PROFITS</small></div> <div class="alert"><strong>PORTFOLIO:</strong> Tech sector at 47.5% (max: 40.0%)<br><small>Action: REBALANCE SECTOR ALLOCATION</small></div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Portfolio Positions</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Shares</th>
+                        <th>Current Price</th>
+                        <th>Value</th>
+                        <th>Day Change</th>
+                        <th>Total Return</th>
+                        <th>Weight</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>NVDA</strong></td>
+                        <td>50</td>
+                        <td>$920.00</td>
+                        <td>$46,000</td>
+                        <td class="positive">$250 (+0.5%)</td>
+                        <td class="positive">$1000 (+2.2%)</td>
+                        <td>22.4%</td>
+                    </tr> <tr>
+                        <td><strong>TSLA</strong></td>
+                        <td>100</td>
+                        <td>$255.00</td>
+                        <td>$25,500</td>
+                        <td class="positive">$150 (+0.6%)</td>
+                        <td class="positive">$500 (+2.0%)</td>
+                        <td>12.4%</td>
+                    </tr> <tr>
+                        <td><strong>MSFT</strong></td>
+                        <td>60</td>
+                        <td>$435.00</td>
+                        <td>$26,100</td>
+                        <td class="positive">$180 (+0.7%)</td>
+                        <td class="positive">$900 (+3.6%)</td>
+                        <td>12.7%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>📈 Top Technical Opportunities</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Price</th>
+                        <th>Score</th>
+                        <th>Recommendation</th>
+                        <th>R:R Ratio</th>
+                        <th>Entry</th>
+                        <th>Target</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ASML</strong></td>
+                        <td>$885.50</td>
+                        <td>87.3</td>
+                        <td><span class="rec-badge">STRONG_BUY</span></td>
+                        <td>3.2:1</td>
+                        <td>$875.00</td>
+                        <td>$1050.00</td>
+                    </tr> <tr>
+                        <td><strong>V</strong></td>
+                        <td>$295.75</td>
+                        <td>82.1</td>
+                        <td><span class="rec-badge">BUY</span></td>
+                        <td>2.8:1</td>
+                        <td>$292.00</td>
+                        <td>$340.00</td>
+                    </tr> <tr>
+                        <td><strong>UNH</strong></td>
+                        <td>$535.25</td>
+                        <td>79.4</td>
+                        <td><span class="rec-badge">BUY</span></td>
+                        <td>2.5:1</td>
+                        <td>$530.00</td>
+                        <td>$615.00</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>📰 Key News & Analysis</h2>
+            <div class="news-item">
+                <div style="font-weight: 600; color: #343a40;">NVIDIA Reports Strong Q4 Results, AI Demand Continues</div>
+                <div style="font-size: 0.9em; color: #6c757d; margin: 8px 0;">
+                    Reuters • Bullish Sentiment • Relevance: 92/100
+                    • Tickers: NVDA
+                </div>
+                <div style="color: #495057;">NVIDIA Corp reported fourth-quarter earnings that beat Wall Street expectations, driven by continued strong demand for AI chips...</div>
+            </div> <div class="news-item">
+                <div style="font-weight: 600; color: #343a40;">Tesla Expands Supercharger Network, Energy Storage Growth</div>
+                <div style="font-size: 0.9em; color: #6c757d; margin: 8px 0;">
+                    Bloomberg • Bullish Sentiment • Relevance: 78/100
+                    • Tickers: TSLA
+                </div>
+                <div style="color: #495057;">Tesla announced plans to expand its Supercharger network by 40% this year while energy storage deployments reached record levels...</div>
+            </div> <div class="news-item">
+                <div style="font-weight: 600; color: #343a40;">Microsoft Azure Growth Accelerates in Cloud Competition</div>
+                <div style="font-size: 0.9em; color: #6c757d; margin: 8px 0;">
+                    CNBC • Bullish Sentiment • Relevance: 84/100
+                    • Tickers: MSFT
+                </div>
+                <div style="color: #495057;">Microsoft's Azure cloud platform showed accelerated growth as enterprise AI adoption drives demand for cloud services...</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>✅ Action Items</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Immediate Actions</h3>
+                    <ul>
+                        <li><strong>NVDA:</strong> Consider taking profits at current levels</li>
+                        <li><strong>Portfolio:</strong> Rebalance tech sector allocation</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Research Opportunities</h3>
+                    <ul>
+                        <li>Research ASML entry opportunity (Score: 87.3)</li>
+                        <li>Monitor V payment processing trends</li>
+                        <li>Review UNH healthcare consolidation</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Risk Management</h3>
+                    <ul>
+                        <li>Portfolio rebalancing recommended</li>
+                        <li>Review stop-loss levels on all positions</li>
+                        <li>Monitor sector concentration limits</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: #343a40; color: #adb5bd; padding: 20px; text-align: center;">
+            Generated on 2026-02-01T16:43:50.597013 • Daily Investment Pipeline DEMO<br>
+            <small>⚠️ This is sample data for demonstration purposes only. Not financial advice.</small>
+        </div>
+    </div>
+</body>
+</html>

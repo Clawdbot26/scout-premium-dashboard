@@ -1,0 +1,54 @@
+# Daily Investment Pipeline - Python Requirements
+# Core data analysis
+pandas>=1.5.0
+numpy>=1.21.0
+yfinance>=0.2.0
+requests>=2.28.0
+
+# Web scraping and parsing
+beautifulsoup4>=4.11.0
+lxml>=4.9.0
+feedparser>=6.0.0
+
+# Template rendering
+jinja2>=3.1.0
+markupsafe>=2.1.0
+
+# Data visualization (optional)
+plotly>=5.0.0
+matplotlib>=3.6.0
+
+# API clients
+python-telegram-bot>=20.0
+tweepy>=4.0.0
+
+# Database support (optional)
+sqlalchemy>=1.4.0
+psycopg2-binary>=2.9.0
+
+# Development and testing
+pytest>=7.0.0
+python-dotenv>=0.19.0
+
+# Async support
+aiohttp>=3.8.0
+asyncio
+
+# Date/time handling
+python-dateutil>=2.8.0
+pytz>=2022.0
+
+# Configuration and logging
+pyyaml>=6.0.0
+colorlog>=6.0.0
+
+# Financial data providers (choose one or more)
+# alpha_vantage>=2.3.0  # Uncomment if using Alpha Vantage
+# finnhub-python>=2.4.0  # Uncomment if using Finnhub
+# polygon-api-client>=1.0.0  # Uncomment if using Polygon
+
+# News data providers (optional)
+# newsapi-python>=0.2.0  # Uncomment if using NewsAPI
+
+# Email notifications (optional)
+# sendgrid>=6.9.0  # Uncomment if using SendGrid

@@ -1,0 +1,113 @@
+{
+  "timestamp": "2026-02-01 16:48:53",
+  "executive_summary": {
+    "market_sentiment": "Mixed with tech leading",
+    "key_focus": "3 technical opportunities identified",
+    "alerts_count": 2,
+    "news_items": 5
+  },
+  "critical_alerts": [
+    {
+      "type": "Technical Opportunity",
+      "message": "ASML showing strong breakout setup - Score 87.3/100",
+      "priority": "High"
+    },
+    {
+      "type": "Sector Rotation",
+      "message": "Healthcare showing relative strength vs tech",
+      "priority": "Medium"
+    }
+  ],
+  "technical_opportunities": [
+    {
+      "ticker": "ASML",
+      "score": 87.3,
+      "recommendation": "Strong Buy",
+      "entry_price": "$856.00",
+      "target_price": "$920.00",
+      "stop_loss": "$825.00",
+      "risk_reward": "2.3:1",
+      "setup": "Bullish pennant breakout with volume confirmation"
+    },
+    {
+      "ticker": "V",
+      "score": 82.1,
+      "recommendation": "Buy",
+      "entry_price": "$315.00",
+      "target_price": "$335.00",
+      "stop_loss": "$305.00",
+      "risk_reward": "2.0:1",
+      "setup": "Support bounce with RSI oversold recovery"
+    },
+    {
+      "ticker": "UNH",
+      "score": 79.8,
+      "recommendation": "Buy",
+      "entry_price": "$595.00",
+      "target_price": "$620.00",
+      "stop_loss": "$580.00",
+      "risk_reward": "1.7:1",
+      "setup": "Healthcare sector momentum with earnings tailwind"
+    }
+  ],
+  "news_analysis": [
+    {
+      "headline": "ASML Reports Strong Q4 Bookings, AI Chip Demand Surge",
+      "sentiment": "Bullish",
+      "relevance_score": 92,
+      "impact": "High",
+      "tickers_mentioned": [
+        "ASML",
+        "NVDA",
+        "TSM"
+      ],
+      "summary": "Equipment demand for advanced AI chips driving record bookings"
+    },
+    {
+      "headline": "Healthcare Sector Rotation Accelerates as Tech Cools",
+      "sentiment": "Neutral",
+      "relevance_score": 78,
+      "impact": "Medium",
+      "tickers_mentioned": [
+        "UNH",
+        "JNJ",
+        "PFE"
+      ],
+      "summary": "Defensive positioning driving healthcare outperformance"
+    }
+  ],
+  "market_calendar": [
+    {
+      "time": "08:30 AM",
+      "event": "Initial Jobless Claims",
+      "importance": "Medium",
+      "forecast": "220K"
+    },
+    {
+      "time": "After Close",
+      "event": "V Earnings Release",
+      "importance": "High",
+      "forecast": "EPS $2.68"
+    }
+  ],
+  "action_items": [
+    {
+      "category": "Research",
+      "task": "Investigate ASML breakout setup - strong technical score",
+      "priority": "High",
+      "timeframe": "Today"
+    },
+    {
+      "category": "Monitoring",
+      "task": "Watch V earnings reaction for entry opportunity",
+      "priority": "Medium",
+      "timeframe": "After close"
+    },
+    {
+      "category": "Sector Analysis",
+      "task": "Review healthcare rotation strength - UNH setup",
+      "priority": "Medium",
+      "timeframe": "This week"
+    }
+  ]
+}

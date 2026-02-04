@@ -1,0 +1,206 @@
+{
+  "timestamp": "2026-02-01T16:43:50.597013",
+  "date": "Sunday, February 01, 2026",
+  "portfolio": {
+    "total_value": 205750.0,
+    "cash_position": 30750.0,
+    "invested_amount": 175000.0,
+    "unrealized_pnl": 8250.0,
+    "unrealized_pnl_pct": 4.95,
+    "day_change": 1850.0,
+    "day_change_pct": 0.91,
+    "positions": [
+      {
+        "symbol": "NVDA",
+        "shares": 50,
+        "current_price": 920.0,
+        "current_value": 46000.0,
+        "unrealized_pnl": 1000.0,
+        "unrealized_pnl_pct": 2.22,
+        "day_change": 250.0,
+        "day_change_pct": 0.54,
+        "position_size_pct": 22.4,
+        "stop_loss_price": 782.0,
+        "target_price": 1150.0
+      },
+      {
+        "symbol": "TSLA",
+        "shares": 100,
+        "current_price": 255.0,
+        "current_value": 25500.0,
+        "unrealized_pnl": 500.0,
+        "unrealized_pnl_pct": 2.0,
+        "day_change": 150.0,
+        "day_change_pct": 0.59,
+        "position_size_pct": 12.4,
+        "stop_loss_price": 212.5,
+        "target_price": 320.0
+      },
+      {
+        "symbol": "MSFT",
+        "shares": 60,
+        "current_price": 435.0,
+        "current_value": 26100.0,
+        "unrealized_pnl": 900.0,
+        "unrealized_pnl_pct": 3.57,
+        "day_change": 180.0,
+        "day_change_pct": 0.69,
+        "position_size_pct": 12.7,
+        "stop_loss_price": 369.75,
+        "target_price": 520.0
+      }
+    ],
+    "alerts": [
+      {
+        "symbol": "NVDA",
+        "alert_type": "profit_target",
+        "severity": "medium",
+        "message": "Price $920 approaching target $1150",
+        "action_recommended": "CONSIDER TAKING PROFITS"
+      },
+      {
+        "symbol": "PORTFOLIO",
+        "alert_type": "sector_concentration",
+        "severity": "medium",
+        "message": "Tech sector at 47.5% (max: 40.0%)",
+        "action_recommended": "REBALANCE SECTOR ALLOCATION"
+      }
+    ],
+    "sector_allocation": {
+      "tech": 47.5,
+      "energy": 12.4,
+      "cash": 15.0
+    },
+    "rebalancing_needed": true
+  },
+  "news_articles": [
+    {
+      "title": "NVIDIA Reports Strong Q4 Results, AI Demand Continues",
+      "source": "Reuters",
+      "published_at": "2026-02-01T08:30:00Z",
+      "summary": "NVIDIA Corp reported fourth-quarter earnings that beat Wall Street expectations, driven by continued strong demand for AI chips...",
+      "sentiment": "bullish",
+      "relevance_score": 92,
+      "tickers_mentioned": [
+        "NVDA"
+      ],
+      "sector": "tech",
+      "impact_level": "high"
+    },
+    {
+      "title": "Tesla Expands Supercharger Network, Energy Storage Growth",
+      "source": "Bloomberg",
+      "published_at": "2026-02-01T07:15:00Z",
+      "summary": "Tesla announced plans to expand its Supercharger network by 40% this year while energy storage deployments reached record levels...",
+      "sentiment": "bullish",
+      "relevance_score": 78,
+      "tickers_mentioned": [
+        "TSLA"
+      ],
+      "sector": "energy",
+      "impact_level": "medium"
+    },
+    {
+      "title": "Microsoft Azure Growth Accelerates in Cloud Competition",
+      "source": "CNBC",
+      "published_at": "2026-02-01T06:45:00Z",
+      "summary": "Microsoft's Azure cloud platform showed accelerated growth as enterprise AI adoption drives demand for cloud services...",
+      "sentiment": "bullish",
+      "relevance_score": 84,
+      "tickers_mentioned": [
+        "MSFT"
+      ],
+      "sector": "tech",
+      "impact_level": "high"
+    }
+  ],
+  "technical_picks": [
+    {
+      "symbol": "ASML",
+      "price": 885.5,
+      "overall_score": 87.3,
+      "recommendation": "strong_buy",
+      "risk_reward_ratio": 3.2,
+      "entry_price": 875.0,
+      "target_price": 1050.0,
+      "sector": "tech"
+    },
+    {
+      "symbol": "V",
+      "price": 295.75,
+      "overall_score": 82.1,
+      "recommendation": "buy",
+      "risk_reward_ratio": 2.8,
+      "entry_price": 292.0,
+      "target_price": 340.0,
+      "sector": "finance"
+    },
+    {
+      "symbol": "UNH",
+      "price": 535.25,
+      "overall_score": 79.4,
+      "recommendation": "buy",
+      "risk_reward_ratio": 2.5,
+      "entry_price": 530.0,
+      "target_price": 615.0,
+      "sector": "healthcare"
+    }
+  ],
+  "news_sentiment": {
+    "overall": "bullish",
+    "tech": "bullish",
+    "finance": "neutral",
+    "healthcare": "neutral",
+    "energy": "bullish"
+  },
+  "sector_analysis": {
+    "tech": {
+      "sentiment": "bullish",
+      "news_count": 8,
+      "top_ticker": "NVDA",
+      "high_impact_count": 3
+    },
+    "finance": {
+      "sentiment": "neutral",
+      "news_count": 3,
+      "top_ticker": "V",
+      "high_impact_count": 1
+    },
+    "healthcare": {
+      "sentiment": "neutral",
+      "news_count": 2,
+      "top_ticker": "UNH",
+      "high_impact_count": 0
+    },
+    "energy": {
+      "sentiment": "bullish",
+      "news_count": 4,
+      "top_ticker": "TSLA",
+      "high_impact_count": 1
+    }
+  },
+  "earnings_today": [
+    {
+      "symbol": "META",
+      "time": "After Market Close",
+      "estimate": "$6.25"
+    },
+    {
+      "symbol": "AMZN",
+      "time": "After Market Close",
+      "estimate": "$15.50"
+    }
+  ],
+  "economic_events": [
+    {
+      "name": "Employment Report",
+      "time": "8:30 AM ET",
+      "impact": "High"
+    },
+    {
+      "name": "Fed Speaking",
+      "time": "2:00 PM ET",
+      "impact": "Medium"
+    }
+  ]
+}
