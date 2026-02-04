@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scout Premium — Scoring Methodology</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0f0f1e 100%);
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: rgba(10, 14, 39, 0.95);
+            border-bottom: 2px solid #00d4ff;
+            padding: 25px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(20px);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav a {
+            color: #00d4ff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: #00ff88;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background: linear-gradient(135deg, rgba(30, 30, 60, 0.5) 0%, rgba(20, 20, 45, 0.5) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #00d4ff;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #00d4ff;
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3 {
+            font-size: 16px;
+            color: #00ff88;
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+
+        .formula-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Monaco', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+
+        .weight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .weight-card {
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        .weight-factor {
+            font-size: 14px;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+
+        .weight-pct {
+            font-size: 24px;
+            font-weight: 800;
+            color: #00ff88;
+            margin: 8px 0;
+        }
+
+        .weight-desc {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .scoring-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, rgba(0, 255, 136, 0.08) 100%);
+            padding: 14px;
+            text-align: left;
+            font-size: 12px;
+            color: #00d4ff;
+            font-weight: 700;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background: rgba(0, 212, 255, 0.08);
+        }
+
+        .score-bar {
+            display: inline-block;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #ff4444, #ffaa00, #00d4ff, #00ff88);
+        }
+
+        .example-box {
+            background: rgba(0, 255, 136, 0.08);
+            border-left: 4px solid #00ff88;
+            padding: 16px;
+            border-radius: 6px;
+            margin: 16px 0;
+        }
+
+        .example-title {
+            font-weight: 700;
+            color: #00ff88;
+            margin-bottom: 8px;
+        }
+
+        .example-text {
+            font-size: 12px;
+            color: #ddd;
+        }
+
+        .breakdown {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .breakdown-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .breakdown-label {
+            font-size: 10px;
+            color: #888;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .breakdown-score {
+            font-size: 18px;
+            font-weight: 800;
+            color: #00ff88;
+        }
+
+        .breakdown-weight {
+            font-size: 10px;
+            color: #00d4ff;
+            margin-top: 4px;
+        }
+
+        .pros {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .pro-box {
+            background: rgba(0, 255, 136, 0.08);
+            border-left: 4px solid #00ff88;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .pro-title {
+            color: #00ff88;
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .pro-text {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .con-box {
+            background: rgba(255, 68, 68, 0.08);
+            border-left: 4px solid #ff4444;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .con-title {
+            color: #ff4444;
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .breakdown {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .pros {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">📈 Scout Premium</div>
+        <div class="nav">
+            <a href="index.html">Home</a>
+            <a href="dashboard-premium.html">Dashboard</a>
+            <a href="methodology.html" style="color: #00ff88;">Methodology</a>
+            <a href="https://github.com/Clawdbot26/scout-premium-dashboard" target="_blank">GitHub</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>🎯 Value Score Methodology</h1>
+        <p class="subtitle">How We Calculate Investment Grades (Transparent & Reproducible)</p>
+
+        <!-- OVERVIEW -->
+        <div class="section">
+            <h2>📊 Overview</h2>
+            <p>Scout Premium uses a <strong>proprietary Value Score algorithm</strong> to rank stocks on a 1-10 scale. The methodology combines fundamental analysis, technical signals, and market context to identify high-conviction investment opportunities.</p>
+            
+            <p style="margin-top: 16px;"><strong>Score Interpretation:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 12px;">
+                <li><strong>8.0-10.0:</strong> Exceptional — Strong buy candidates</li>
+                <li><strong>7.0-7.9:</strong> Compelling — Quality portfolio holdings</li>
+                <li><strong>6.5-6.9:</strong> Monitor — Approaching buy threshold</li>
+                <li><strong>6.0-6.4:</strong> Neutral — Wait for better entry</li>
+                <li><strong>&lt;6.0:</strong> Avoid — Better opportunities elsewhere</li>
+            </ul>
+        </div>
+
+        <!-- FIVE FACTORS -->
+        <div class="section">
+            <h2>⚙️ The 5 Scoring Factors</h2>
+            <p>Value Score is a weighted average of five independent metrics:</p>
+
+            <div class="weight-grid">
+                <div class="weight-card">
+                    <div class="weight-factor">1. Valuation</div>
+                    <div class="weight-pct">30%</div>
+                    <div class="weight-desc">P/E ratio adjusted for growth (PEG ratio)</div>
+                </div>
+                <div class="weight-card">
+                    <div class="weight-factor">2. Growth</div>
+                    <div class="weight-pct">25%</div>
+                    <div class="weight-desc">Revenue growth rate (12-month trailing)</div>
+                </div>
+                <div class="weight-card">
+                    <div class="weight-factor">3. Technical</div>
+                    <div class="weight-pct">20%</div>
+                    <div class="weight-desc">RSI strength + 1-month momentum</div>
+                </div>
+                <div class="weight-card">
+                    <div class="weight-factor">4. Volume</div>
+                    <div class="weight-pct">15%</div>
+                    <div class="weight-desc">Accumulation signals + volume ratio</div>
+                </div>
+                <div class="weight-card">
+                    <div class="weight-factor">5. Risk</div>
+                    <div class="weight-pct">10%</div>
+                    <div class="weight-desc">Beta volatility (stock vs market)</div>
+                </div>
+            </div>
+
+            <div class="formula-box">
+Value Score = (Valuation × 0.30) + (Growth × 0.25) + (Technical × 0.20) + (Volume × 0.15) + (Risk × 0.10)
+            </div>
+        </div>
+
+        <!-- FACTOR 1: VALUATION -->
+        <div class="section">
+            <h2>1️⃣ Valuation (30%)</h2>
+            <p><strong>Purpose:</strong> Identifies stocks trading at reasonable prices relative to growth potential.</p>
+            
+            <h3>Metric: PEG Ratio</h3>
+            <p style="margin-bottom: 12px;">PEG = P/E Ratio ÷ Revenue Growth Rate</p>
+            
+            <table class="scoring-table">
+                <thead>
+                    <tr>
+                        <th>PEG Ratio</th>
+                        <th>Score</th>
+                        <th>Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&lt; 1.0</td>
+                        <td><span style="color: #00ff88; font-weight: 700;">10/10</span></td>
+                        <td>Exceptional value — Strong buy</td>
+                    </tr>
+                    <tr>
+                        <td>1.0 - 1.5</td>
+                        <td><span style="color: #00ff88; font-weight: 700;">8.5/10</span></td>
+                        <td>Attractive — Good entry point</td>
+                    </tr>
+                    <tr>
+                        <td>1.5 - 2.0</td>
+                        <td><span style="color: #00d4ff; font-weight: 700;">7.5/10</span></td>
+                        <td>Fair value — Reasonable</td>
+                    </tr>
+                    <tr>
+                        <td>2.0 - 3.0</td>
+                        <td><span style="color: #ffaa00; font-weight: 700;">6.0/10</span></td>
+                        <td>Slight premium — Neutral</td>
+                    </tr>
+                    <tr>
+                        <td>&gt; 3.0</td>
+                        <td><span style="color: #ff4444; font-weight: 700;">4.0/10</span></td>
+                        <td>Expensive — Avoid</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <div class="example-title">Example: NVDA (Feb 2026)</div>
+                <div class="example-text">
+                    P/E: 44.3x | Revenue Growth: 35%<br/>
+                    PEG Ratio = 44.3 ÷ 35 = <strong>1.27</strong> → <strong>8.5/10</strong><br/>
+                    <span style="color: #00ff88;">✓ Exceptional growth justifies the multiple</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FACTOR 2: GROWTH -->
+        <div class="section">
+            <h2>2️⃣ Growth (25%)</h2>
+            <p><strong>Purpose:</strong> Rewards companies with strong revenue expansion (indicator of market demand).</p>
+            
+            <h3>Metric: 12-Month Revenue Growth Rate</h3>
+            
+            <table class="scoring-table">
+                <thead>
+                    <tr>
+                        <th>Revenue Growth</th>
+                        <th>Score</th>
+                        <th>Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&gt; 30%</td>
+                        <td><span style="color: #00ff88; font-weight: 700;">10/10</span></td>
+                        <td>Explosive growth — Exceptional</td>
+                    </tr>
+                    <tr>
+                        <td>20% - 30%</td>
+                        <td><span style="color: #00ff88; font-weight: 700;">9/10</span></td>
+                        <td>Strong growth — High quality</td>
+                    </tr>
+                    <tr>
+                        <td>15% - 20%</td>
+                        <td><span style="color: #00d4ff; font-weight: 700;">8/10</span></td>
+                        <td>Solid growth — Above average</td>
+                    </tr>
+                    <tr>
+                        <td>10% - 15%</td>
+                        <td><span style="color: #00d4ff; font-weight: 700;">7/10</span></td>
+                        <td>Moderate growth — Acceptable</td>
+                    </tr>
+                    <tr>
+                        <td>&lt; 10%</td>
+                        <td><span style="color: #ffaa00; font-weight: 700;">4-6/10</span></td>
+                        <td>Sluggish growth — Below average</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <div class="example-title">Example: MRVL (Feb 2026)</div>
+                <div class="example-text">
+                    Revenue Growth: 32% YoY<br/>
+                    Score: <strong>10/10</strong><br/>
+                    <span style="color: #00ff88;">✓ Explosive growth driven by custom AI chip adoption</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FACTOR 3: TECHNICAL -->
+        <div class="section">
+            <h2>3️⃣ Technical (20%)</h2>
+            <p><strong>Purpose:</strong> Captures price momentum and timing strength.</p>
+            
+            <h3>Metrics: RSI (14) + 1-Month Momentum</h3>
+            
+            <p style="margin-top: 16px;"><strong>RSI Bands (Relative Strength Index):</strong></p>
+            <ul style="margin-left: 20px; margin-top: 8px;">
+                <li>RSI 30-70 = Healthy zone (base score 7/10)</li>
+                <li>RSI 20-80 = Extended zone (base score 6/10)</li>
+                <li>RSI &lt;20 or &gt;80 = Extreme (risky, score 4/10)</li>
+            </ul>
+
+            <p style="margin-top: 16px;"><strong>Momentum Adjustment:</strong></p>
+            <table class="scoring-table">
+                <thead>
+                    <tr>
+                        <th>1-Month Return</th>
+                        <th>Adjustment</th>
+                        <th>Logic</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&gt; +10%</td>
+                        <td>+2.0 points</td>
+                        <td>Strong uptrend — Accumulation phase</td>
+                    </tr>
+                    <tr>
+                        <td>0% to +10%</td>
+                        <td>+1.0 point</td>
+                        <td>Positive momentum — Building strength</td>
+                    </tr>
+                    <tr>
+                        <td>-5% to 0%</td>
+                        <td>0 points</td>
+                        <td>Neutral — Consolidating</td>
+                    </tr>
+                    <tr>
+                        <td>&lt; -5%</td>
+                        <td>-1.0 point</td>
+                        <td>Weak trend — Caution</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <div class="example-title">Example: PLTR (Feb 2026)</div>
+                <div class="example-text">
+                    RSI: 63 (healthy) → Base 7/10<br/>
+                    1-Month Return: +15% → +2.0 boost<br/>
+                    Final Technical Score: <strong>9/10</strong><br/>
+                    <span style="color: #00ff88;">✓ Strong uptrend with momentum</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FACTOR 4: VOLUME -->
+        <div class="section">
+            <h2>4️⃣ Volume (15%)</h2>
+            <p><strong>Purpose:</strong> Identifies institutional accumulation and strong buying pressure.</p>
+            
+            <h3>Metrics: Volume Ratio + Price Trend</h3>
+            <p>Volume Ratio = Current Volume ÷ 30-Day Average Volume</p>
+            
+            <table class="scoring-table">
+                <thead>
+                    <tr>
+                        <th>Volume Scenario</th>
+                        <th>Score</th>
+                        <th>Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Vol Ratio &gt;1.5 + Price Up</td>
+                        <td><span style="color: #00ff88; font-weight: 700;">9/10</span></td>
+                        <td>Institutional buying on strength</td>
+                    </tr>
+                    <tr>
+                        <td>Vol Ratio 1.2-1.5 + Price Up</td>
+                        <td><span style="color: #00ff88; font-weight: 700;">8/10</span></td>
+                        <td>Good volume on gains</td>
+                    </tr>
+                    <tr>
+                        <td>Vol Ratio &gt;1.0 + Positive Month</td>
+                        <td><span style="color: #00d4ff; font-weight: 700;">7/10</span></td>
+                        <td>Accumulation phase</td>
+                    </tr>
+                    <tr>
+                        <td>Vol Ratio 0.8-1.0</td>
+                        <td><span style="color: #ffaa00; font-weight: 700;">6/10</span></td>
+                        <td>Average activity</td>
+                    </tr>
+                    <tr>
+                        <td>Vol Ratio &lt;0.8</td>
+                        <td><span style="color: #ff4444; font-weight: 700;">5/10</span></td>
+                        <td>Low conviction moves</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <div class="example-title">Example: AMD (Feb 2026)</div>
+                <div class="example-text">
+                    Current Volume: 42.5M | 30-Day Avg: 38M<br/>
+                    Volume Ratio: 1.12x | Price: +2% today<br/>
+                    Score: <strong>7/10</strong><br/>
+                    <span style="color: #00ff88;">✓ Healthy accumulation on positive days</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FACTOR 5: RISK -->
+        <div class="section">
+            <h2>5️⃣ Risk (10%)</h2>
+            <p><strong>Purpose:</strong> Adjusts score for volatility; rewards stability while not penalizing growth.</p>
+            
+            <h3>Metric: Beta (vs S&P 500)</h3>
+            
+            <table class="scoring-table">
+                <thead>
+                    <tr>
+                        <th>Beta Range</th>
+                        <th>Score</th>
+                        <th>Profile</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&lt; 1.2</td>
+                        <td><span style="color: #00ff88; font-weight: 700;">9/10</span></td>
+                        <td>Low volatility — Stable compounder</td>
+                    </tr>
+                    <tr>
+                        <td>1.2 - 1.5</td>
+                        <td><span style="color: #00ff88; font-weight: 700;">8/10</span></td>
+                        <td>Moderate volatility — Growth with stability</td>
+                    </tr>
+                    <tr>
+                        <td>1.5 - 1.8</td>
+                        <td><span style="color: #00d4ff; font-weight: 700;">7/10</span></td>
+                        <td>Moderate-high volatility — Growth focus</td>
+                    </tr>
+                    <tr>
+                        <td>1.8 - 2.2</td>
+                        <td><span style="color: #ffaa00; font-weight: 700;">6/10</span></td>
+                        <td>High volatility — Cyclical/speculative</td>
+                    </tr>
+                    <tr>
+                        <td>&gt; 2.2</td>
+                        <td><span style="color: #ff4444; font-weight: 700;">4/10</span></td>
+                        <td>Very high volatility — Risky</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <div class="example-title">Example: NVDA vs CRM (Feb 2026)</div>
+                <div class="example-text">
+                    NVDA Beta: 2.31 → <strong>4/10</strong> (Very volatile)<br/>
+                    CRM Beta: 1.28 → <strong>8/10</strong> (Stable growth)<br/>
+                    <span style="color: #ffaa00;">→ Risk score rewards stability but doesn't disqualify growth</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- REAL EXAMPLES -->
+        <div class="section">
+            <h2>🔍 Real Score Breakdowns</h2>
+            
+            <h3>Example 1: NVDA (8.2/10) — Growth Powerhouse</h3>
+            <div class="breakdown">
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Valuation</div>
+                    <div class="breakdown-score">10</div>
+                    <div class="breakdown-weight">× 0.30</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Growth</div>
+                    <div class="breakdown-score">10</div>
+                    <div class="breakdown-weight">× 0.25</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Technical</div>
+                    <div class="breakdown-score">7</div>
+                    <div class="breakdown-weight">× 0.20</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Volume</div>
+                    <div class="breakdown-score">7</div>
+                    <div class="breakdown-weight">× 0.15</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Risk</div>
+                    <div class="breakdown-score">4</div>
+                    <div class="breakdown-weight">× 0.10</div>
+                </div>
+            </div>
+            <div style="background: rgba(0, 212, 255, 0.08); padding: 12px; border-radius: 6px; border-left: 4px solid #00d4ff;">
+                (10 × 0.30) + (10 × 0.25) + (7 × 0.20) + (7 × 0.15) + (4 × 0.10) = <strong>3.0 + 2.5 + 1.4 + 1.05 + 0.4 = 8.35 → 8.2</strong>
+            </div>
+
+            <h3 style="margin-top: 32px;">Example 2: CRM (5.0/10) — Fallen From Grace</h3>
+            <div class="breakdown">
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Valuation</div>
+                    <div class="breakdown-score">4</div>
+                    <div class="breakdown-weight">× 0.30</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Growth</div>
+                    <div class="breakdown-score">6</div>
+                    <div class="breakdown-weight">× 0.25</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Technical</div>
+                    <div class="breakdown-score">3</div>
+                    <div class="breakdown-weight">× 0.20</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Volume</div>
+                    <div class="breakdown-score">6</div>
+                    <div class="breakdown-weight">× 0.15</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Risk</div>
+                    <div class="breakdown-score">8</div>
+                    <div class="breakdown-weight">× 0.10</div>
+                </div>
+            </div>
+            <div style="background: rgba(255, 170, 0, 0.08); padding: 12px; border-radius: 6px; border-left: 4px solid #ffaa00;">
+                (4 × 0.30) + (6 × 0.25) + (3 × 0.20) + (6 × 0.15) + (8 × 0.10) = <strong>1.2 + 1.5 + 0.6 + 0.9 + 0.8 = 5.0</strong>
+            </div>
+
+            <p style="margin-top: 20px; color: #aaa; font-size: 12px;">
+                <strong>Why the difference?</strong> CRM's lower growth rate (12% vs NVDA's 35%) and weaker technical momentum (consolidating vs uptrending) pull down the score despite being a quality company.
+            </p>
+        </div>
+
+        <!-- STRENGTHS & LIMITATIONS -->
+        <div class="section">
+            <h2>✅ Strengths & ⚠️ Limitations</h2>
+            
+            <div class="pros">
+                <div class="pro-box">
+                    <div class="pro-title">✓ Data-Driven</div>
+                    <div class="pro-text">All scores based on public market data (Yahoo Finance, SEC filings)</div>
+                </div>
+                <div class="pro-box">
+                    <div class="pro-title">✓ Transparent</div>
+                    <div class="pro-text">Every factor, weight, and calculation is explained here</div>
+                </div>
+                <div class="pro-box">
+                    <div class="pro-title">✓ Dynamic</div>
+                    <div class="pro-text">Scores recalculate daily as market conditions change</div>
+                </div>
+                <div class="pro-box">
+                    <div class="pro-title">✓ Sector-Agnostic</div>
+                    <div class="pro-text">Works for tech, healthcare, finance — no sector bias</div>
+                </div>
+                <div class="con-box">
+                    <div class="con-title">⚠ No Qualitative Factors</div>
+                    <div class="con-text">Doesn't capture moat, management quality, or competitive positioning (yet)</div>
+                </div>
+                <div class="con-box">
+                    <div class="con-title">⚠ Backward-Looking</div>
+                    <div class="con-text">Growth scores use 12-month trailing data, not future guidance</div>
+                </div>
+                <div class="con-box">
+                    <div class="con-title">⚠ No Catalyst Timing</div>
+                    <div class="con-text">Doesn't predict earnings surprises or major announcements</div>
+                </div>
+                <div class="con-box">
+                    <div class="con-title">⚠ Market Anomalies</div>
+                    <div class="con-text">Extreme valuations or beta can skew scores in crisis periods</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UPDATES & EVOLUTION -->
+        <div class="section">
+            <h2>🔄 Updates & Evolution</h2>
+            <p>This methodology is <strong>versioned and evolving</strong>. We track all changes:</p>
+            
+            <h3>Current Version: 2.0</h3>
+            <ul style="margin-left: 20px; margin-top: 12px;">
+                <li><strong>Feb 2026:</strong> Added dynamic scoring engine (moved from static scores)</li>
+                <li><strong>Feb 2026:</strong> Increased Growth weighting from 20% → 25% (AI cycle emphasis)</li>
+                <li><strong>Planned:</strong> Add qualitative moat scoring (competitive advantages)</li>
+                <li><strong>Planned:</strong> Integrate analyst revisions and sentiment signals</li>
+                <li><strong>Planned:</strong> Catalyst prediction using earnings surprise patterns</li>
+            </ul>
+
+            <p style="margin-top: 20px; color: #888; font-size: 12px;">Check GitHub for historical versions and methodology iterations.</p>
+        </div>
+
+        <!-- DISCLAIMER -->
+        <div class="section" style="border-left: 4px solid #ffaa00;">
+            <h2>⚖️ Disclaimer</h2>
+            <p>Scout Premium scores are <strong>for informational purposes only</strong> and not financial advice. While our methodology is rigorous and transparent, all investing carries risk. Past performance does not guarantee future results.</p>
+            
+            <p style="margin-top: 12px;">Always conduct your own due diligence and consult a financial advisor before making investment decisions.</p>
+        </div>
+
+        <div class="footer">
+            <p>Scout Premium Methodology | Last Updated: February 2026 | <a href="https://github.com/Clawdbot26/scout-premium-dashboard" target="_blank" style="color: #00d4ff;">View on GitHub</a></p>
+        </div>
+    </div>
+</body>
+</html>
