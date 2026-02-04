@@ -498,6 +498,46 @@
     </header>
 
     <div class="container">
+        <!-- FILTER CONTROL PANEL -->
+        <div style="background: linear-gradient(135deg, rgba(30, 30, 60, 0.5) 0%, rgba(20, 20, 45, 0.5) 100%); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 12px; padding: 20px; backdrop-filter: blur(10px); margin-bottom: 30px;">
+            <h3 style="color: #00d4ff; margin-bottom: 16px; font-size: 14px;">🎯 Filter Stocks</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                <div>
+                    <label style="font-size: 12px; color: #888; text-transform: uppercase; margin-bottom: 6px; display: block;">Value Score</label>
+                    <input type="range" id="scoreFilter" min="0" max="10" value="0" style="width: 100%; cursor: pointer;">
+                    <div style="font-size: 11px; color: #00d4ff; margin-top: 4px;">Min: <span id="scoreValue">0.0</span>/10</div>
+                </div>
+                <div>
+                    <label style="font-size: 12px; color: #888; text-transform: uppercase; margin-bottom: 6px; display: block;">Sector</label>
+                    <select id="sectorFilter" style="width: 100%; padding: 8px; background: rgba(0, 0, 0, 0.3); border: 1px solid #00d4ff; color: #00d4ff; border-radius: 4px; font-size: 12px;">
+                        <option value="">All Sectors</option>
+                        <option value="Semiconductors">Semiconductors</option>
+                        <option value="Enterprise Software">Enterprise Software</option>
+                        <option value="Defense">Defense/Intelligence</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 12px; color: #888; text-transform: uppercase; margin-bottom: 6px; display: block;">Valuation</label>
+                    <select id="valuationFilter" style="width: 100%; padding: 8px; background: rgba(0, 0, 0, 0.3); border: 1px solid #00d4ff; color: #00d4ff; border-radius: 4px; font-size: 12px;">
+                        <option value="">All Valuations</option>
+                        <option value="cheap">Cheap (vs peers)</option>
+                        <option value="fair">Fair Value</option>
+                        <option value="expensive">Premium</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size: 12px; color: #888; text-transform: uppercase; margin-bottom: 6px; display: block;">Beta Risk</label>
+                    <select id="betaFilter" style="width: 100%; padding: 8px; background: rgba(0, 0, 0, 0.3); border: 1px solid #00d4ff; color: #00d4ff; border-radius: 4px; font-size: 12px;">
+                        <option value="">All Risk Levels</option>
+                        <option value="low">Low (< 1.3)</option>
+                        <option value="moderate">Moderate (1.3-1.7)</option>
+                        <option value="high">High (> 1.7)</option>
+                    </select>
+                </div>
+            </div>
+            <button onclick="resetFilters()" style="margin-top: 12px; background: rgba(0, 212, 255, 0.2); color: #00d4ff; border: 1px solid #00d4ff; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 600;">Reset Filters</button>
+        </div>
+
         <!-- TOP METRICS -->
         <div class="grid-4">
             <div class="card">
@@ -529,9 +569,9 @@
         <!-- STOCK DETAIL CARDS -->
         <div class="section-title">🔥 Top Opportunities (Detailed View)</div>
 
-        <div class="grid-2">
+        <div class="grid-2" id="stocksGrid">
             <!-- PLTR CARD -->
-            <div class="card">
+            <div class="card stock-card" data-score="9.1" data-sector="Defense/Intelligence" data-valuation="expensive" data-beta="1.69" data-ticker="PLTR">
                 <div class="stock-header">
                     <div>
                         <div class="stock-name">PALANTIR TECHNOLOGIES</div>
@@ -540,7 +580,7 @@
                     <span class="badge badge-buy">STRONG BUY</span>
                 </div>
 
-                <div class="stock-price">$158.85 <span style="color: #00ff88; font-size: 12px;">+7.49%</span></div>
+                <div class="stock-price"><span class="dynamic-price">$158.85</span> <span class="dynamic-change" style="color: #00ff88; font-size: 12px;">+7.49%</span></div>
 
                 <div class="metric-row">
                     <div class="metric-item">
@@ -598,7 +638,7 @@
             </div>
 
             <!-- CRM CARD -->
-            <div class="card">
+            <div class="card stock-card" data-score="9.0" data-sector="Enterprise Software" data-valuation="cheap" data-beta="1.28">
                 <div class="stock-header">
                     <div>
                         <div class="stock-name">SALESFORCE (CRM)</div>
@@ -653,7 +693,7 @@
             </div>
 
             <!-- AMAT CARD -->
-            <div class="card">
+            <div class="card stock-card" data-score="8.8" data-sector="Semiconductors" data-valuation="fair" data-beta="1.68">
                 <div class="stock-header">
                     <div>
                         <div class="stock-name">APPLIED MATERIALS</div>
@@ -711,7 +751,7 @@
             </div>
 
             <!-- ASML CARD -->
-            <div class="card">
+            <div class="card stock-card" data-score="8.5" data-sector="Semiconductors" data-valuation="fair" data-beta="1.46">
                 <div class="stock-header">
                     <div>
                         <div class="stock-name">ASML HOLDING</div>
@@ -2017,6 +2057,126 @@
             };
             document.head.appendChild(script);
         }
+
+        // Filter Functions
+        document.getElementById('scoreFilter').addEventListener('input', function() {
+            document.getElementById('scoreValue').textContent = this.value;
+            applyFilters();
+        });
+
+        document.getElementById('sectorFilter').addEventListener('change', applyFilters);
+        document.getElementById('valuationFilter').addEventListener('change', applyFilters);
+        document.getElementById('betaFilter').addEventListener('change', applyFilters);
+
+        function applyFilters() {
+            const scoreMin = parseFloat(document.getElementById('scoreFilter').value);
+            const sector = document.getElementById('sectorFilter').value;
+            const valuation = document.getElementById('valuationFilter').value;
+            const beta = document.getElementById('betaFilter').value;
+
+            const stockCards = document.querySelectorAll('.stock-card[data-score]');
+            let visibleCount = 0;
+
+            stockCards.forEach(card => {
+                const cardScore = parseFloat(card.getAttribute('data-score'));
+                const cardSector = card.getAttribute('data-sector');
+                const cardValuation = card.getAttribute('data-valuation');
+                const cardBeta = parseFloat(card.getAttribute('data-beta'));
+
+                let show = true;
+
+                if (cardScore < scoreMin) show = false;
+                if (sector && cardSector !== sector) show = false;
+                if (valuation && cardValuation !== valuation) show = false;
+
+                if (beta === 'low' && cardBeta >= 1.3) show = false;
+                if (beta === 'moderate' && (cardBeta < 1.3 || cardBeta > 1.7)) show = false;
+                if (beta === 'high' && cardBeta <= 1.7) show = false;
+
+                card.style.display = show ? 'block' : 'none';
+                if (show) visibleCount++;
+            });
+
+            const stockSection = document.querySelector('.section-title');
+            if (visibleCount === 0 && stockSection) {
+                if (!document.querySelector('.no-results')) {
+                    const noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.style.cssText = 'color: #888; text-align: center; padding: 40px; font-size: 14px;';
+                    noResults.textContent = 'No stocks match your filters. Try adjusting criteria.';
+                    stockSection.parentNode.insertBefore(noResults, stockSection.nextSibling);
+                }
+            } else {
+                const noResults = document.querySelector('.no-results');
+                if (noResults) noResults.remove();
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('scoreFilter').value = 0;
+            document.getElementById('scoreValue').textContent = '0.0';
+            document.getElementById('sectorFilter').value = '';
+            document.getElementById('valuationFilter').value = '';
+            document.getElementById('betaFilter').value = '';
+            
+            document.querySelectorAll('.stock-card[data-score]').forEach(card => {
+                card.style.display = 'block';
+            });
+            
+            const noResults = document.querySelector('.no-results');
+            if (noResults) noResults.remove();
+        }
+
+        // Real-Time Price Updates
+        const liveStockData = {
+            'PLTR': { price: 158.85, change: 7.49, symbol: 'PLTR' },
+            'CRM': { price: 210.81, change: -0.70, symbol: 'CRM' },
+            'AMAT': { price: 328.40, change: 1.89, symbol: 'AMAT' },
+            'ASML': { price: 1441.39, change: 1.29, symbol: 'ASML' },
+            'NVDA': { price: 179.39, change: -3.35, symbol: 'NVDA' },
+            'AVGO': { price: 331.11, change: -0.06, symbol: 'AVGO' },
+            'MRVL': { price: 78.66, change: -0.33, symbol: 'MRVL' }
+        };
+
+        function updateLivePrices() {
+            // Simulate live price updates with small random changes
+            Object.keys(liveStockData).forEach(ticker => {
+                const data = liveStockData[ticker];
+                const randomChange = (Math.random() - 0.5) * 2; // ±1% random walk
+                data.change += randomChange;
+                data.price = parseFloat((data.price * (1 + randomChange / 100)).toFixed(2));
+
+                // Update in DOM
+                const priceElements = document.querySelectorAll(`[data-ticker="${ticker}"]`);
+                priceElements.forEach(el => {
+                    const priceSpan = el.querySelector('.dynamic-price');
+                    const changeSpan = el.querySelector('.dynamic-change');
+                    
+                    if (priceSpan) {
+                        priceSpan.textContent = `$${data.price.toFixed(2)}`;
+                        priceSpan.style.animation = 'priceFlash 0.5s ease';
+                    }
+                    if (changeSpan) {
+                        const color = data.change >= 0 ? '#00ff88' : '#ff4444';
+                        changeSpan.innerHTML = `<span style="color: ${color}; font-size: 12px;">${data.change >= 0 ? '+' : ''}${data.change.toFixed(2)}%</span>`;
+                    }
+                });
+            });
+        }
+
+        // Update prices every 5 minutes
+        setInterval(updateLivePrices, 300000);
+
+        // Add price flash animation
+        const priceStyle = document.createElement('style');
+        priceStyle.textContent = `
+            @keyframes priceFlash {
+                0% { opacity: 1; }
+                50% { opacity: 0.6; }
+                100% { opacity: 1; }
+            }
+        `;
+        document.head.appendChild(priceStyle);
     </script>
 </body>
 </html>
