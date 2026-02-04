@@ -191,20 +191,20 @@
         }
 
         .stock-change {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 700;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 8px;
         }
 
         .change-positive {
-            background: rgba(0, 255, 136, 0.2);
             color: #00ff88;
         }
 
         .change-negative {
-            background: rgba(255, 68, 68, 0.2);
             color: #ff4444;
         }
 
@@ -508,6 +508,15 @@
 
             <!-- Tab 1: Overview -->
             <div id="overview" class="tab-content active">
+                <!-- Action Recommendation Box -->
+                <div class="accordion open" onclick="toggleAccordion(this)" style="margin-bottom: 24px; border: 2px solid #00d4ff;">
+                    <div class="accordion-header" style="background: rgba(0, 212, 255, 0.15);">
+                        <h3 style="color: #00d4ff; font-size: 16px;">💡 What to Do Now</h3>
+                        <span class="accordion-toggle">▼</span>
+                    </div>
+                    <div class="accordion-body" id="actionBody"></div>
+                </div>
+
                 <!-- Metrics Accordion -->
                 <div class="accordion" onclick="toggleAccordion(this)">
                     <div class="accordion-header">
@@ -594,13 +603,18 @@
     </div>
 
     <script>
-        // Stock Data
+        // Stock Data with Recommendations
         const stocks = {
             'PLTR': {
                 name: 'Palantir Technologies',
                 price: 158.85,
                 change: 7.49,
                 score: 9.1,
+                recommendation: 'STRONG BUY',
+                recColor: '#00ff88',
+                recBg: 'rgba(0, 255, 136, 0.2)',
+                action: 'Start position or add to existing',
+                rationale: 'Strong growth (28% YoY), improving profitability, Government contracts locked in. Best-in-class AI governance platform.',
                 sector: 'Defense/Intelligence',
                 beta: 1.69,
                 pe: 248.2,
@@ -613,6 +627,11 @@
                 price: 210.81,
                 change: -0.70,
                 score: 9.0,
+                recommendation: 'STRONG BUY',
+                recColor: '#00ff88',
+                recBg: 'rgba(0, 255, 136, 0.2)',
+                action: 'Initiate or add to position',
+                rationale: 'Cheap vs peers (0.9x), Agentforce AI adoption accelerating, $5.6B Army contract locked. Rare combination of growth + value.',
                 sector: 'Enterprise Software',
                 beta: 1.28,
                 pe: 28.1,
@@ -625,6 +644,11 @@
                 price: 328.40,
                 change: 1.89,
                 score: 8.8,
+                recommendation: 'BUY',
+                recColor: '#00d4ff',
+                recBg: 'rgba(0, 212, 255, 0.2)',
+                action: 'Start new position',
+                rationale: 'Fair valuation, strong earnings track record (88% beat rate), AI capex cycle strongest in 20 years. Taiwan capex up 40% YoY.',
                 sector: 'Semiconductors',
                 beta: 1.68,
                 pe: 37.9,
@@ -637,6 +661,11 @@
                 price: 1441.39,
                 change: 1.29,
                 score: 8.5,
+                recommendation: 'BUY',
+                recColor: '#00d4ff',
+                recBg: 'rgba(0, 212, 255, 0.2)',
+                action: 'Initiate position (size appropriately)',
+                rationale: 'EUV monopoly = 10-year competitive moat. Taiwan capex locked into multi-year contracts. €12B buyback signals confidence.',
                 sector: 'Semiconductors',
                 beta: 1.46,
                 pe: 49.3,
@@ -649,6 +678,11 @@
                 price: 179.39,
                 change: -3.35,
                 score: 8.3,
+                recommendation: 'ACCUMULATE',
+                recColor: '#ffaa00',
+                recBg: 'rgba(255, 170, 0, 0.2)',
+                action: 'Add on pullbacks, trim on rallies',
+                rationale: 'Best-in-class GPU with 35% growth justified. High beta (2.31) = volatility. Position sized appropriate to risk tolerance. Dollar-cost average.',
                 sector: 'Semiconductors',
                 beta: 2.31,
                 pe: 44.3,
@@ -661,6 +695,11 @@
                 price: 331.11,
                 change: -0.06,
                 score: 8.1,
+                recommendation: 'HOLD',
+                recColor: '#00d4ff',
+                recBg: 'rgba(0, 212, 255, 0.15)',
+                action: 'If you own it: hold. If not: wait for better entry',
+                rationale: 'Good company, but 69x P/E is pricing in perfection. Dividend (4.2%) + growth = 15-20% CAGR hold. Wait for 5-10% pullback to add.',
                 sector: 'Semiconductors',
                 beta: 1.22,
                 pe: 69.4,
@@ -673,6 +712,11 @@
                 price: 78.66,
                 change: -0.33,
                 score: 7.9,
+                recommendation: 'BUY',
+                recColor: '#00d4ff',
+                recBg: 'rgba(0, 212, 255, 0.2)',
+                action: 'Start position (spec play, size accordingly)',
+                rationale: 'Cheapest valuation (27.8x), custom AI chip TAM = $25B+ by 2028. Speculative but risk/reward = 60/40 upside. Keep position size 1-2% of portfolio.',
                 sector: 'Semiconductors',
                 beta: 1.98,
                 pe: 27.8,
@@ -730,8 +774,22 @@
             document.getElementById('stockPrice').textContent = `$${stock.price.toFixed(2)}`;
             
             const changeSpan = document.getElementById('stockChange');
-            changeSpan.className = `stock-change ${stock.change >= 0 ? 'change-positive' : 'change-negative'}`;
-            changeSpan.textContent = `${stock.change >= 0 ? '+' : ''}${stock.change.toFixed(2)}% • Score: ${stock.score}/10`;
+            changeSpan.innerHTML = `
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <div>
+                        <div class="stock-change" style="display: inline-block; padding: 6px 12px; border-radius: 6px; ${stock.change >= 0 ? 'background: rgba(0, 255, 136, 0.2); color: #00ff88;' : 'background: rgba(255, 68, 68, 0.2); color: #ff4444;'} font-size: 12px; font-weight: 600;">
+                            ${stock.change >= 0 ? '+' : ''}${stock.change.toFixed(2)}%
+                        </div>
+                    </div>
+                    <div style="width: 1px; height: 40px; background: rgba(0, 212, 255, 0.2);"></div>
+                    <div>
+                        <div style="font-size: 11px; color: #888; margin-bottom: 4px;">RECOMMENDATION</div>
+                        <div style="padding: 8px 16px; border-radius: 6px; background: ${stock.recBg}; color: ${stock.recColor}; font-weight: 800; font-size: 14px;">
+                            ${stock.recommendation}
+                        </div>
+                    </div>
+                </div>
+            `;
 
             // Quick stats
             const stats = document.getElementById('quickStats');
@@ -754,6 +812,44 @@
                 </div>
             `;
 
+            // Action Recommendation
+            const actionBody = document.getElementById('actionBody');
+            actionBody.innerHTML = `
+                <div style="padding: 16px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div>
+                            <div style="font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 8px; font-weight: 700;">Your Action</div>
+                            <div style="font-size: 14px; color: ${stock.recColor}; font-weight: 700; line-height: 1.6;">
+                                ${stock.action}
+                            </div>
+                        </div>
+                        <div>
+                            <div style="font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 8px; font-weight: 700;">Why Now</div>
+                            <div style="font-size: 13px; color: #ddd; line-height: 1.6;">
+                                ${stock.rationale}
+                            </div>
+                        </div>
+                    </div>
+                    ${stock.recommendation === 'STRONG BUY' ? `
+                        <div style="background: rgba(0, 255, 136, 0.1); border: 1px solid #00ff88; border-radius: 6px; padding: 12px; margin-top: 16px;">
+                            <div style="font-size: 12px; color: #00ff88;">✓ This is a high-conviction pick (Score 9.0+). Consider making it a core holding.</div>
+                        </div>
+                    ` : stock.recommendation === 'BUY' ? `
+                        <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid #00d4ff; border-radius: 6px; padding: 12px; margin-top: 16px;">
+                            <div style="font-size: 12px; color: #00d4ff;">✓ Compelling opportunity at current prices. Good entry point.</div>
+                        </div>
+                    ` : stock.recommendation === 'ACCUMULATE' ? `
+                        <div style="background: rgba(255, 170, 0, 0.1); border: 1px solid #ffaa00; border-radius: 6px; padding: 12px; margin-top: 16px;">
+                            <div style="font-size: 12px; color: #ffaa00;">⚡ High beta = volatility. Dollar-cost average your entry. Build position over time on pullbacks.</div>
+                        </div>
+                    ` : `
+                        <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid #00d4ff; border-radius: 6px; padding: 12px; margin-top: 16px;">
+                            <div style="font-size: 12px; color: #00d4ff;">ℹ️ Wait for a better entry point. This is a quality company, but valuation is full.</div>
+                        </div>
+                    `}
+                </div>
+            `;
+
             // Metrics
             const metrics = document.getElementById('metricsGrid');
             metrics.innerHTML = `
@@ -766,12 +862,12 @@
                     <div class="metric-value">${stock.revenue}</div>
                 </div>
                 <div class="metric-box">
-                    <div class="metric-label">Recommendation</div>
-                    <div class="metric-value"><span class="badge badge-buy">STRONG BUY</span></div>
+                    <div class="metric-label">Value Score</div>
+                    <div class="metric-value">${stock.score.toFixed(1)}/10</div>
                 </div>
                 <div class="metric-box">
-                    <div class="metric-label">Target Price</div>
-                    <div class="metric-value">+${((Math.random() * 50 + 10)).toFixed(0)}%</div>
+                    <div class="metric-label">Sector</div>
+                    <div class="metric-value" style="font-size: 12px;">${stock.sector}</div>
                 </div>
             `;
 
