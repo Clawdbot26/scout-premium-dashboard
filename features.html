@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scout Premium — Features Implementation Plan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #0f0f1e 100%);
+            color: #e0e0e0;
+            padding: 40px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #00d4ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            font-size: 16px;
+            color: #888;
+            margin-bottom: 40px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, rgba(30, 30, 60, 0.5) 0%, rgba(20, 20, 45, 0.5) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+        }
+        .feature-card h3 {
+            font-size: 18px;
+            color: #00d4ff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .status.building {
+            background: rgba(255, 170, 0, 0.2);
+            color: #ffaa00;
+        }
+        .status.planned {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+        }
+        .status.complete {
+            background: rgba(0, 255, 136, 0.2);
+            color: #00ff88;
+        }
+        .feature-card p {
+            font-size: 13px;
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .progress {
+            height: 4px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #00ff88);
+        }
+        .timeline {
+            background: linear-gradient(135deg, rgba(30, 30, 60, 0.5) 0%, rgba(20, 20, 45, 0.5) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 40px;
+        }
+        .timeline h2 {
+            color: #00d4ff;
+            margin-bottom: 24px;
+            font-size: 20px;
+        }
+        .timeline-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+        .timeline-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: #00d4ff;
+            color: #0a0e27;
+            border-radius: 50%;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .timeline-content h3 {
+            color: #e0e0e0;
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+        .timeline-content p {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        .timeline-estimate {
+            font-size: 11px;
+            color: #00ff88;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Scout Premium — Top 5 Features</h1>
+        <p class="subtitle">Implementation roadmap for dashboard enhancements</p>
+
+        <div class="feature-grid">
+            <!-- Feature 1: Performance History -->
+            <div class="feature-card">
+                <span class="status building">Building Now</span>
+                <h3>📊 1. Performance History</h3>
+                <p>Track how past recommendations performed. Show win rate, avg gain on Strong Buy, drawdown recovery time.</p>
+                <div class="progress">
+                    <div class="progress-fill" style="width: 70%;"></div>
+                </div>
+                <p style="margin-top: 12px; font-size: 11px;">Status: Adding historical data table to dashboard</p>
+            </div>
+
+            <!-- Feature 2: PDF Export -->
+            <div class="feature-card">
+                <span class="status building">Building Now</span>
+                <h3>📄 2. PDF Export</h3>
+                <p>Download daily/weekly reports as PDF. Share investment analysis with others or save for records.</p>
+                <div class="progress">
+                    <div class="progress-fill" style="width: 60%;"></div>
+                </div>
+                <p style="margin-top: 12px; font-size: 11px;">Status: Integrating html2pdf library</p>
+            </div>
+
+            <!-- Feature 3: News Feed -->
+            <div class="feature-card">
+                <span class="status building">Building Now</span>
+                <h3>📰 3. News Feed</h3>
+                <p>Latest headlines for each stock. Sentiment tags (bullish/neutral/bearish) to provide context.</p>
+                <div class="progress">
+                    <div class="progress-fill" style="width: 50%;"></div>
+                </div>
+                <p style="margin-top: 12px; font-size: 11px;">Status: Adding news section per stock card</p>
+            </div>
+
+            <!-- Feature 4: Interactive Filters -->
+            <div class="feature-card">
+                <span class="status planned">Planned</span>
+                <h3>🎯 4. Interactive Filters</h3>
+                <p>Filter by score, sector, beta, valuation. Sort by upside, risk, growth. Find stocks that match your criteria.</p>
+                <div class="progress">
+                    <div class="progress-fill" style="width: 0%;"></div>
+                </div>
+                <p style="margin-top: 12px; font-size: 11px;">Status: Next phase — control panel UI</p>
+            </div>
+
+            <!-- Feature 5: Real-Time Prices -->
+            <div class="feature-card">
+                <span class="status planned">Planned</span>
+                <h3>⚡ 5. Real-Time Prices</h3>
+                <p>Live stock prices updating every 5 minutes. Price alerts when stock hits target. Intraday chart.</p>
+                <div class="progress">
+                    <div class="progress-fill" style="width: 0%;"></div>
+                </div>
+                <p style="margin-top: 12px; font-size: 11px;">Status: API integration setup</p>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <h2>📅 Build Timeline (This Week)</h2>
+            
+            <div class="timeline-item">
+                <div class="timeline-number">1</div>
+                <div class="timeline-content">
+                    <h3>Performance History Table</h3>
+                    <p>Show historical performance of past Scout recommendations (past 6 months)</p>
+                    <p style="margin-top: 12px;">Metrics: Entry price → Current price, % gain/loss, hold duration, win rate</p>
+                    <p class="timeline-estimate">⏱️ 30-45 minutes</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-number">2</div>
+                <div class="timeline-content">
+                    <h3>PDF Export Button</h3>
+                    <p>Add "Download Report" button. Exports current dashboard view as PDF</p>
+                    <p style="margin-top: 12px;">Includes: Top 7 stocks, valuations, risk analysis, methodology summary</p>
+                    <p class="timeline-estimate">⏱️ 20-30 minutes</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-number">3</div>
+                <div class="timeline-content">
+                    <h3>News Feed Integration</h3>
+                    <p>Add latest news headlines below each stock card</p>
+                    <p style="margin-top: 12px;">Shows: Headline, source, sentiment (bullish/neutral/bearish), publish date</p>
+                    <p class="timeline-estimate">⏱️ 30-45 minutes</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-number">4</div>
+                <div class="timeline-content">
+                    <h3>Filter Control Panel</h3>
+                    <p>Add sticky filter bar at top. Let users filter by score, sector, valuation, beta</p>
+                    <p style="margin-top: 12px;">Real-time filtering with show/hide stocks matching criteria</p>
+                    <p class="timeline-estimate">⏱️ 45-60 minutes</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-number">5</div>
+                <div class="timeline-content">
+                    <h3>Real-Time Price Updates</h3>
+                    <p>Connect to financial API (Alpha Vantage or Finnhub free tier)</p>
+                    <p style="margin-top: 12px;">Update prices every 5 min, show 1D/1W charts, trigger price alerts</p>
+                    <p class="timeline-estimate">⏱️ 60-90 minutes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
